@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "bun run --hot src/server.ts",
+    "build": "bun build src/server.ts",
     "client": "bun run --hot src/client.ts",
     "test": "bun test src/server.test.ts"
   },
