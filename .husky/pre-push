@@ -1,0 +1,11 @@
+echo "🚀✨ Initiating Pre-Push Sequence | STAND BY FOR LAUNCH"
+echo "🎯 Commencing Final Verification Protocol..."
+
+if bunx lint-staged; then
+    echo "✨ Validation Complete: CODE INTEGRITY VERIFIED"
+    echo "🌠 CLEARED FOR DEPLOYMENT // Executing Push Sequence..."
+else
+    echo "🚨 CRITICAL ERROR DETECTED // Validation Failed"
+    echo "⚡ SYSTEM ABORT: Review commits and retry deployment sequence"
+    exit 1
+fi
