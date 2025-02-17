@@ -6,13 +6,23 @@
     "dev": "bun run --hot src/server.ts",
     "build": "bun build src/server.ts",
     "client": "bun run --hot src/client.ts",
-    "test": "bun test src/server.test.ts"
+    "test": "bun test src/server.test.ts",
+    "lint": "eslint src --fix",
+    "format": "prettier --write src",
+    "prepare": "husky",
+    "prisma:migrate": "prisma migrate dev --name",
+    "prisma:generate": "prisma generate",
+    "prisma:watch": "prisma generate --watch",
+    "prisma:reset": "prisma migrate reset --force",
+    "prisma:studio": "prisma studio"
   },
   "dependencies": {
     "@hono/swagger-ui": "^0.5.0",
     "@hono/zod-openapi": "^0.18.4",
     "@prisma/client": "^6.3.1",
     "hono": "^4.7.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
     "prisma": "^6.3.1"
   },
   "devDependencies": {
@@ -27,5 +37,14 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-unused-imports": "^4.1.4",
     "prettier": "^3.5.1"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "eslint src --fix",
+      "prettier --write src"
+    ]
+  },
+  "volta": {
+    "node": "23.8.0"
   }
 }
