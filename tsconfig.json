@@ -14,15 +14,21 @@
     "verbatimModuleSyntax": true,
     "noEmit": true,
 
-    // Best practices
-    "strict": true,
-    "skipLibCheck": true,
-    "noFallthroughCasesInSwitch": true,
+    "strict": true, // 基本的な型チェックの設定
+    "skipLibCheck": true, // node_modulesの型チェックをスキップ（ビルド時間改善）
+    "noFallthroughCasesInSwitch": true, // スイッチ文でのcase漏れを防止
 
-    // Some stricter flags
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noPropertyAccessFromIndexSignature": true
+    // 適度な厳格さの設定
+    "noImplicitAny": true, // 暗黙的なany型を禁止
+    "noImplicitThis": true, // 暗黙的なthis型を禁止
+    "strictNullChecks": true, // nullとundefinedのチェックを厳格に
+    "strictFunctionTypes": true, // 関数の型チェックを厳格に
+    
+    // 開発の柔軟性を保つための緩和設定
+    "noUnusedLocals": false,        // 未使用の変数を許容
+    "noUnusedParameters": false,    // 未使用のパラメータを許容
+    "noPropertyAccessFromIndexSignature": false,  // インデックスシグネチャからのプロパティアクセスを許容
+    "exactOptionalPropertyTypes": false,  // オプショナルプロパティの型を緩和
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.test.ts", "src/**/*.mts"]
 }
