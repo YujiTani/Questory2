@@ -86,7 +86,6 @@ export default [
           aliases: [
             { alias: '@', matcher: './src' },
           ],
-          allowRelative: false,
         },
       ],
 
