@@ -22,7 +22,7 @@ const compat = new FlatCompat({
 export default [
   ...fixupConfigRules(compat.extends('eslint:recommended', 'airbnb-base', 'plugin:import/typescript', 'prettier')),
   {
-    // ignores: ['eslint.config.mjs'],
+    ignores: ['eslint.config.mjs'],
   },
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
