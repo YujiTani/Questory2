@@ -28,7 +28,7 @@
     "noUnusedLocals": false, // 未使用の変数を許容
     "noUnusedParameters": false, // 未使用のパラメータを許容
     "noPropertyAccessFromIndexSignature": false, // インデックスシグネチャからのプロパティアクセスを許容
-    "exactOptionalPropertyTypes": false, // オプショナルプロパティの型を緩和
+    "exactOptionalPropertyTypes": true, // オプショナルプロパティの型を緩和
 
     "paths": {
       "@/*": ["./src/*"]
