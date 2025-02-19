@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import { testClient } from "hono/testing";
 
-import type { UserRouteType } from "@/routes/users";
+import type { UserRouteType } from "@/routes/users/route";
 
 import app from "@/server";
 

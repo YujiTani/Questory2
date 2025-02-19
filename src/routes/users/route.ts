@@ -1,7 +1,7 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 
 import { createUserRoute } from "@/routes/users/schema";
-import { createUser } from "@/usecases/user.usecase";
+import { createUser } from "@/usecases/users.usecase";
 
 export const userRoute = new OpenAPIHono()
   .openapi(createUserRoute, async (c) => {

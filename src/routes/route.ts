@@ -1,6 +1,6 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 
-import { userRoute } from "@/routes/users/index";
+import { userRoute } from "@/routes/users/route";
 
 export const apiRoute = new OpenAPIHono();
 

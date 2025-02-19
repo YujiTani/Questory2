@@ -1,6 +1,6 @@
 import { hc } from "hono/client";
 
-import type { UserRouteType } from "@/routes/users/index";
+import type { UserRouteType } from "@/routes/users/route";
 
 const client = hc<UserRouteType>("http://localhost:3000/");
 

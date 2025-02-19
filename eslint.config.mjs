@@ -49,6 +49,15 @@ export default [
         typescript: {
           project: './tsconfig.json',
         },
+        alias: {
+          map: [
+            {
+              alias: '@',
+              name: './src',
+            },
+          ],
+          extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        },
       },
     },
 
