@@ -1,18 +1,19 @@
-import type { AppType } from './server'
-import { hc } from 'hono/client'
+import { hc } from "hono/client";
 
-const client = hc<AppType>('http://localhost:3000/')
+import type { UserRouteType } from "@/routes/users/index";
+
+const client = hc<UserRouteType>("http://localhost:3000/");
 
 const res = await client.api.users.$post({
   json: {
-    name: 'tarou',
+    name: "tarou",
     age: 15,
-  }
-})
+  },
+});
 
 if (res.ok) {
-  const user = await res.json()
-  console.log(res.status, 'post success', user)
+  const user = await res.json();
+  console.log(res.status, "post success", user);
 } else {
-  console.log(res.status, 'post error')
+  console.log(res.status, "post error");
 }

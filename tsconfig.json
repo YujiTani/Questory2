@@ -23,12 +23,24 @@
     "noImplicitThis": true, // 暗黙的なthis型を禁止
     "strictNullChecks": true, // nullとundefinedのチェックを厳格に
     "strictFunctionTypes": true, // 関数の型チェックを厳格に
-    
+
     // 開発の柔軟性を保つための緩和設定
-    "noUnusedLocals": false,        // 未使用の変数を許容
-    "noUnusedParameters": false,    // 未使用のパラメータを許容
-    "noPropertyAccessFromIndexSignature": false,  // インデックスシグネチャからのプロパティアクセスを許容
-    "exactOptionalPropertyTypes": false,  // オプショナルプロパティの型を緩和
+    "noUnusedLocals": false, // 未使用の変数を許容
+    "noUnusedParameters": false, // 未使用のパラメータを許容
+    "noPropertyAccessFromIndexSignature": false, // インデックスシグネチャからのプロパティアクセスを許容
+    "exactOptionalPropertyTypes": false, // オプショナルプロパティの型を緩和
+
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "baseUrl": ".", // モジュール解決にルートディレクトリを指定
+    "typeRoots": ["./types", "./node_modules/@types"] // 型ファイルのパスを指定
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.test.ts", "src/**/*.mts"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.mts",
+    "types/**/*.d.ts",
+    "eslint.config.mjs"
+  ]
 }
