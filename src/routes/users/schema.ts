@@ -1,6 +1,10 @@
 import { createRoute, z } from "@hono/zod-openapi";
 
+import type { Prisma } from "@prisma/client";
+
 import { resErrorSchema } from "@/routes/schema";
+
+export type User = Prisma.UserGetPayload<{}>;
 
 /**
  * ユーザー作成時のリクエストボディ
