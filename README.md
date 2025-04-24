@@ -1,4 +1,5 @@
-# Hono-Boilerplate
+# DDD + レイアードアーキテクチャ + デザインパターンを使ったAPIサーバー構築
+
 このボイラープレートは、TypeScript、Hono、Prismaを使用して構築されています。
 
 ## 機能
@@ -55,7 +56,6 @@ bun dev
 ```bash
 bun test
 ```
-
 
 ### コードスタイル
 
