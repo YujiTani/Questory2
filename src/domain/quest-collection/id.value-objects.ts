@@ -1,3 +1,3 @@
 import { Id } from "@/domain/common/id.value-objects";
 
-export class QuestionId extends Id {}
+export class QuestionCollectionId extends Id {}
