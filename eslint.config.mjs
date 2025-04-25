@@ -124,8 +124,11 @@ export default [
   {
     files: ["**/*.value-objects.ts"],
     rules: {
-      // 値オブジェクトのコンストラクタ引数を未使用でも保持したいため
       "@typescript-eslint/no-unused-private-class-members": "off",
+      "no-useless-constructor": "off",
+      "@typescript-eslint/no-useless-constructor": "error",
+      "no-empty-function": "off",
+      "@typescript-eslint/no-empty-function": "error",
     },
   },
 ];
