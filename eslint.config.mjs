@@ -60,7 +60,7 @@ export default [
           map: [
             {
               alias: "@",
-              name: "./src",
+              name: "./src/*",
             },
           ],
           extensions: [".js", ".jsx", ".ts", ".tsx"],
