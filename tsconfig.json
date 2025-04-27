@@ -14,27 +14,29 @@
     "verbatimModuleSyntax": true,
     "noEmit": true,
 
-    "strict": true, // 基本的な型チェックの設定
-    "skipLibCheck": true, // node_modulesの型チェックをスキップ（ビルド時間改善）
-    "noFallthroughCasesInSwitch": true, // スイッチ文でのcase漏れを防止
+    // 厳格な型チェック
+    "strict": true,
+    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
 
-    // 適度な厳格さの設定
-    "noImplicitAny": true, // 暗黙的なany型を禁止
-    "noImplicitThis": true, // 暗黙的なthis型を禁止
-    "strictNullChecks": true, // nullとundefinedのチェックを厳格に
-    "strictFunctionTypes": true, // 関数の型チェックを厳格に
+    // DDDに役立つ緩和設定
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "exactOptionalPropertyTypes": true,
+    "allowUnreachableCode": false,
 
-    // 開発の柔軟性を保つための緩和設定
-    "noUnusedLocals": false, // 未使用の変数を許容
-    "noUnusedParameters": false, // 未使用のパラメータを許容
-    "noPropertyAccessFromIndexSignature": false, // インデックスシグネチャからのプロパティアクセスを許容
-    "exactOptionalPropertyTypes": true, // オプショナルプロパティの型を緩和
-
+    // パス解決
     "paths": {
       "@/*": ["./src/*"]
     },
-    "baseUrl": ".", // モジュール解決にルートディレクトリを指定
-    "typeRoots": ["./types", "./node_modules/@types"] // 型ファイルのパスを指定
+    "baseUrl": ".",
+    "typeRoots": ["./types", "./node_modules/@types"]
   },
   "include": [
     "src/**/*.ts",
