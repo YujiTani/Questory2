@@ -1,6 +1,5 @@
 export abstract class DateValueObject {
   protected constructor(private readonly value: Date) {
-    this.value = value;
     this.validate();
   }
 

@@ -1,6 +1,5 @@
 export abstract class Id {
   constructor(private readonly value: string) {
-    this.value = value;
     this.validate();
   }
 
