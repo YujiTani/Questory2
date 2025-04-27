@@ -5,4 +5,8 @@ export class QuestionText extends Text {
     this.validateNotEmpty("QuestText");
     this.validateMaxLength(1000, "QuestText");
   }
+
+  static create(value: string): QuestionText {
+    return new QuestionText(value);
+  }
 }

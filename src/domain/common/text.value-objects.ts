@@ -1,5 +1,5 @@
 export abstract class Text {
-  constructor(private readonly value: string) {
+  protected constructor(private readonly value: string) {
     this.validate();
   }
 
@@ -45,5 +45,9 @@ export class Name extends Text {
 export class Description extends Text {
   protected validate(): void {
     this.validateMaxLength(1000, "Description");
+  }
+
+  static create(value: string): Description {
+    return new Description(value);
   }
 }

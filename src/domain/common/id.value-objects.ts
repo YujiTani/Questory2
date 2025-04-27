@@ -1,5 +1,5 @@
 export abstract class Id {
-  constructor(private readonly value: string) {
+  protected constructor(private readonly value: string) {
     this.validate();
   }
 

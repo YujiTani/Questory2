@@ -47,6 +47,10 @@ export class UpdatedAt extends DateValueObject {
   static create(date: Date = new Date()): UpdatedAt {
     return new UpdatedAt(date);
   }
+
+  update() {
+    return UpdatedAt.create(new Date());
+  }
 }
 
 export class DeletedAt extends DateValueObject {
@@ -60,5 +64,9 @@ export class DeletedAt extends DateValueObject {
 
   static createNull(): null {
     return null;
+  }
+
+  delete() {
+    return DeletedAt.createNull();
   }
 }

@@ -1,7 +1,7 @@
-import type {
-  CreatedAt,
+import {
   DeletedAt,
-  UpdatedAt,
+  type UpdatedAt,
+  type CreatedAt,
 } from "@/domain/common/date.value-objects";
 
 // 監査情報をもつエンティティの抽象クラス
@@ -31,5 +31,17 @@ export abstract class AuditableEntity<TId> {
 
   isDeleted(): boolean {
     return this.deletedAt !== null;
+  }
+
+  updateTimestamp(): void {
+    this.updatedAt = this.updatedAt.update();
+  }
+
+  delete(value: Date): void {
+    this.deletedAt = DeletedAt.create(value);
+  }
+
+  restore(): void {
+    this.deletedAt = null;
   }
 }
