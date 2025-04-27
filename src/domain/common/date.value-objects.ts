@@ -1,5 +1,5 @@
 export abstract class DateValueObject {
-  constructor(private readonly value: Date) {
+  protected constructor(private readonly value: Date) {
     this.value = value;
     this.validate();
   }
@@ -55,7 +55,11 @@ export class DeletedAt extends DateValueObject {
     super(value);
   }
 
-  static create(date: Date = new Date()): DeletedAt {
+  static create(date: Date): DeletedAt {
     return new DeletedAt(date);
+  }
+
+  static createNull(): null {
+    return null;
   }
 }
