@@ -4,7 +4,9 @@ import {
   type CreatedAt,
 } from "@/domain/common/date.value-objects";
 
-// 監査情報をもつエンティティの抽象クラス
+/**
+ * 監査情報エンティティー
+ */
 export abstract class AuditableEntity<TId> {
   protected constructor(
     private readonly id: TId,

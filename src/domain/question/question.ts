@@ -8,6 +8,9 @@ import { Description } from "@/domain/common/text.value-objects";
 import { QuestionId } from "@/domain/question/id.value-objects";
 import { QuestionText } from "@/domain/question/text.value-objects";
 
+/**
+ * 問題エンティティー
+ */
 export class QuestionEntity extends AuditableEntity<QuestionId> {
   protected constructor(
     id: QuestionId,
