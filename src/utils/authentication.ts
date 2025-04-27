@@ -35,7 +35,6 @@ export async function getAuthenticatedUserFromCookie(c: Context) {
   try {
     // Your existing token validation logic
     return await sdk.sessions().validateToken(sessionToken);
-    // eslint-disable-next-line no-unused-vars
   } catch (error) {
     // Log the error if needed
     return null;
