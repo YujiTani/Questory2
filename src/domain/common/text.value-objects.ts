@@ -40,6 +40,10 @@ export class Name extends Text {
     this.validateNotEmpty("Name");
     this.validateMaxLength(100, "Name");
   }
+
+  static create(value: string): Name {
+    return new Name(value);
+  }
 }
 
 export class Description extends Text {

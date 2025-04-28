@@ -55,12 +55,13 @@ export default [
       "import/resolver": {
         typescript: {
           project: "./tsconfig.json",
+          alwaysTryTypes: true
         },
         alias: {
           map: [
             {
               alias: "@",
-              name: "./src/*",
+              name: "./src",
             },
           ],
           extensions: [".js", ".jsx", ".ts", ".tsx"],
