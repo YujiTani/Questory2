@@ -15,20 +15,20 @@ export abstract class AuditableEntity<TId> {
     protected deletedAt: DeletedAt | null,
   ) {}
 
-  getId(): TId {
+  get getId(): TId {
     return this.id;
   }
 
-  getCreatedAt(): Date {
-    return this.createdAt.getValue();
+  get getCreatedAt(): Date {
+    return this.createdAt.getValue;
   }
 
   getUpdatedAt(): Date {
-    return this.updatedAt.getValue();
+    return this.updatedAt.getValue;
   }
 
   getDeletedAt(): Date | null {
-    return this.deletedAt?.getValue() || null;
+    return this.deletedAt?.getValue || null;
   }
 
   isDeleted(): boolean {

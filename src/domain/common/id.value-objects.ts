@@ -3,7 +3,7 @@ export abstract class Id {
     this.validate();
   }
 
-  getValue(): string {
+  get getValue(): string {
     return this.value;
   }
 

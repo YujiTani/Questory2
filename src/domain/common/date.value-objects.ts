@@ -3,7 +3,7 @@ export abstract class DateValueObject {
     this.validate();
   }
 
-  getValue(): Date {
+  get getValue(): Date {
     return new Date(this.value);
   }
 

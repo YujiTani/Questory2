@@ -3,7 +3,7 @@ export abstract class Text {
     this.validate();
   }
 
-  getValue(): string {
+  get getValue(): string {
     return this.value;
   }
 
