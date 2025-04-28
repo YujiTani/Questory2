@@ -15,12 +15,32 @@ class TestDate extends DateValueObject {
 
 // 1.生成テスト
 describe("DateValueObject生成テスト", () => {
-  test("abstract class DateValueObject を継承したクラスを使用してDateを生成できる", () => {
-    const date = new Date();
+  // 正常系
+  test("2025年1月1日というデータを作成できる", () => {
+    const date = new Date("2025-01-01T00:00:00.000Z");
     const dateObj = TestDate.create(date);
     expect(dateObj).toBeDefined();
     expect(dateObj).toBeInstanceOf(TestDate);
-    expect(dateObj.getValue().getTime()).toBe(date.getTime());
+    expect(dateObj.getValue.getTime()).toEqual(1735689600000);
+  });
+
+  test("2050年1月1日というデータを作成できる", () => {
+    const date = new Date("2050-01-01T00:00:00.000Z");
+    const dateObj = TestDate.create(date);
+    expect(dateObj).toBeDefined();
+    expect(dateObj).toBeInstanceOf(TestDate);
+    expect(dateObj.getValue.getTime()).toEqual(2524608000000);
+  });
+
+  test("2025年1月1日0時0分0秒のデータを取得できる", () => {
+    const date = new Date("2025-01-01T00:00:00.000Z");
+    const dateObj = TestDate.create(date);
+    expect(dateObj.getValue.getFullYear()).toEqual(2025);
+    expect(dateObj.getValue.getMonth()).toEqual(0); // 月は0から始まるので1月は0
+    expect(dateObj.getValue.getDate()).toEqual(1);
+    expect(dateObj.getValue.getHours()).toEqual(0);
+    expect(dateObj.getValue.getMinutes()).toEqual(0);
+    expect(dateObj.getValue.getSeconds()).toEqual(0);
   });
 
   test("不正な日付を渡すとエラーが発生する", () => {
@@ -33,24 +53,23 @@ describe("DateValueObject生成テスト", () => {
 
 // 2.等価性のテスト
 describe("DateValueObject比較テスト", () => {
-  test("同じ時間を持つDateValueObjectはひとつのDateValueObjectとして扱われる", () => {
-    const date = new Date("2023-01-01T00:00:00.000Z");
-    const dateObj1 = TestDate.create(date);
+  test("同じ日時で作成した場合、等しい値として扱う", () => {
+    const dateObj1 = TestDate.create(new Date("2023-01-01T00:00:00.000Z"));
     const dateObj2 = TestDate.create(new Date("2023-01-01T00:00:00.000Z"));
-    expect(dateObj1.equals(dateObj2)).toBe(true);
+    expect(dateObj1.equals(dateObj2)).toBeTruthy();
   });
 
-  test("異なる時間を持つDateValueObjectは別のDateValueObjectとして扱われる", () => {
+  test("異なる日時で作成した場合、異なる値をして扱う", () => {
     const dateObj1 = TestDate.create(new Date("2023-01-01T00:00:00.000Z"));
     const dateObj2 = TestDate.create(new Date("2023-01-02T00:00:00.000Z"));
-    expect(dateObj1.equals(dateObj2)).toBe(false);
+    expect(dateObj1.equals(dateObj2)).toBeFalsy();
   });
 
   test("異なるクラス同士は等価ではない", () => {
-    const date = new Date();
+    const date = new Date("2025-01-01T00:00:00.000Z");
     const testDate = TestDate.create(date);
     const createdAt = CreatedAt.create(date);
-    expect(testDate.equals(createdAt)).toBe(false);
+    expect(testDate.equals(createdAt)).toBeFalsy();
   });
 });
 
@@ -63,9 +82,9 @@ describe("DateValueObjectフォーマットテスト", () => {
   });
 
   test("toMilliseconds()でミリ秒のタイムスタンプを取得できる", () => {
-    const date = new Date("2023-01-01T00:00:00.000Z");
+    const date = new Date("2025-01-01T00:00:00.000Z");
     const dateObj = TestDate.create(date);
-    expect(dateObj.toMilliseconds()).toBe(date.getTime());
+    expect(dateObj.toMilliseconds()).toEqual(1735689600000);
   });
 });
 
@@ -84,7 +103,7 @@ describe("CreatedAt Value Objectテスト", () => {
   test("指定した日付でCreatedAtを生成できる", () => {
     const date = new Date("2023-01-01T00:00:00.000Z");
     const createdAt = CreatedAt.create(date);
-    expect(createdAt.getValue().getTime()).toBe(date.getTime());
+    expect(createdAt.getValue.getTime()).toBe(date.getTime());
   });
 });
 
@@ -117,7 +136,7 @@ describe("DeletedAt Value Objectテスト", () => {
   test("指定した日付でDeletedAtを生成できる", () => {
     const date = new Date("2023-01-01T00:00:00.000Z");
     const deletedAt = DeletedAt.create(date);
-    expect(deletedAt.getValue().getTime()).toBe(date.getTime());
+    expect(deletedAt.getValue.getTime()).toBe(date.getTime());
   });
 
   test("createNull()でnullを生成できる", () => {

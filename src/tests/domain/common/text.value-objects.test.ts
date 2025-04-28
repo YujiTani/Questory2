@@ -26,7 +26,7 @@ describe("Text Value Object生成テスト", () => {
     const text = TestText.create("text value");
     expect(text).toBeDefined();
     expect(text).toBeInstanceOf(TestText);
-    expect(text.getValue()).toBe("text value");
+    expect(text.getValue).toBe("text value");
   });
 
   test("空の値を渡すとエラーが発生する", () => {
@@ -72,7 +72,7 @@ describe("Name Value Objectテスト", () => {
   test("正常に生成できる", () => {
     const name = TestName.create("User Name");
     expect(name).toBeDefined();
-    expect(name.getValue()).toBe("User Name");
+    expect(name.getValue).toBe("User Name");
   });
 
   test("空の値を渡すとエラーが発生する", () => {
@@ -90,13 +90,13 @@ describe("Description Value Objectテスト", () => {
   test("正常に生成できる", () => {
     const description = Description.create("This is a description");
     expect(description).toBeDefined();
-    expect(description.getValue()).toBe("This is a description");
+    expect(description.getValue).toBe("This is a description");
   });
 
   test("空文字でも生成できる", () => {
     const description = Description.create("");
     expect(description).toBeDefined();
-    expect(description.getValue()).toBe("");
+    expect(description.getValue).toBe("");
   });
 
   test("1000文字を超える値を渡すとエラーが発生する", () => {

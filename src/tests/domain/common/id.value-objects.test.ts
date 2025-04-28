@@ -14,7 +14,7 @@ describe("Id Value Object生成テスト", () => {
     const id = TestId.create("1234");
     expect(id).toBeDefined();
     expect(id).toBeInstanceOf(TestId);
-    expect(id.getValue()).toBe("1234");
+    expect(id.getValue).toBe("1234");
   });
 
   test("空の値を渡すとエラーが発生する", () => {
