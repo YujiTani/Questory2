@@ -130,4 +130,16 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
       deletedAt,
     );
   }
+
+  // ドメインロジックを表現するメソッドを作成する
+
+  // 問題に解答するメソッド 間違えると状態をRetryに変更する, 苦手問題を正答すると状態をActiveに変更する、
+  // 2回目間違えた場合、状態をLastAttemptに変更する
+  // 3回目間違えた場合、状態をSkippedに変更する
+
+  // 問題コレクションを溶き終わったときに、Skkippedの問題をdifficultに変更する
+
+  // 問題を取得するメソッド, 問題内容, 解答と選択肢を一つの配列にまとめたものを渡す, カテゴリーや, typeも返す
+
+  // 解説を取得するメソッド
 }
