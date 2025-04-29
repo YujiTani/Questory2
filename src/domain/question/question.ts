@@ -14,12 +14,12 @@ import { QuestionText } from "@/domain/question/text.value-objects";
  * - multiple_choice: 複数選択する形式
  * - sort: 並び替え形式
  */
-export const _questionTypes = {
+export const questionTypes = {
   select: "SELECT",
   multiple_choice: "MULTIPLE_CHOICE",
   sort: "SORT",
 } as const;
-export type QuestionType = (typeof _questionTypes)[keyof typeof _questionTypes];
+export type QuestionType = (typeof questionTypes)[keyof typeof questionTypes];
 
 /**
  * 問題のカテゴリー
@@ -27,13 +27,13 @@ export type QuestionType = (typeof _questionTypes)[keyof typeof _questionTypes];
  * - http: HTTP問題
  * - typescript: TypeScript問題
  */
-export const _questionCategory = {
+export const questionCategory = {
   sql: "SQL",
   http: "HTTP",
   typescript: "TYPESCRIPT",
 } as const;
 export type QuestionCategory =
-  (typeof _questionCategory)[keyof typeof _questionCategory];
+  (typeof questionCategory)[keyof typeof questionCategory];
 
 /**
  * 問題の状態
@@ -43,14 +43,14 @@ export type QuestionCategory =
  * - skipped: 問題がスキップされた状態
  * - difficult: 苦手問題として登録された状態
  */
-export const _status = {
+export const questionState = {
   active: "ACTIVE",
   retry: "RETRY",
   last_attempt: "LAST_ATTEMPT",
   skipped: "SKIPPED",
   difficult: "DIFFICULT",
 } as const;
-export type Status = (typeof _status)[keyof typeof _status];
+export type State = (typeof questionState)[keyof typeof questionState];
 
 /**
  * 問題エンティティー
@@ -63,7 +63,7 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     private alternativeAnswers: QuestionText[],
     private explanation: Description,
     private type: QuestionType, // default: select
-    private state: Status, // default: active
+    private state: State, // default: active
     private category: QuestionCategory, // default: SQL
     createdAt: CreatedAt,
     updatedAt: UpdatedAt,
@@ -80,9 +80,9 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     correctAnswer: string,
     alternativeAnswers: string[],
     explanation: string,
-    type: QuestionType = _questionTypes.select,
-    state: Status = _status.active,
-    category: QuestionCategory = _questionCategory.sql,
+    type: QuestionType = questionTypes.select,
+    state: State = questionState.active,
+    category: QuestionCategory = questionCategory.sql,
   ): QuestionEntity {
     return new QuestionEntity(
       QuestionId.create(),
@@ -110,7 +110,7 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     alternativeAnswers: QuestionText[],
     explanation: Description,
     type: QuestionType,
-    state: Status,
+    state: State,
     category: QuestionCategory,
     createdAt: CreatedAt,
     updatedAt: UpdatedAt,
@@ -131,15 +131,114 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     );
   }
 
-  // ドメインロジックを表現するメソッドを作成する
+  private get getState(): State {
+    return this.state;
+  }
 
-  // 問題に解答するメソッド 間違えると状態をRetryに変更する, 苦手問題を正答すると状態をActiveに変更する、
-  // 2回目間違えた場合、状態をLastAttemptに変更する
-  // 3回目間違えた場合、状態をSkippedに変更する
+  private set setState(newState: State) {
+    this.state = newState;
+    this.updatedAt.update();
+  }
 
-  // 問題コレクションを溶き終わったときに、Skkippedの問題をdifficultに変更する
+  /**
+   * 問題を取得する
+   * @return 問題内容, 解答配列, 問題の出題形式, カテゴリー
+   */
+  get getQuestionInfo() {
+    return {
+      text: this.text.getValue,
+      answer:
+        this.type === "MULTIPLE_CHOICE"
+          ? this.shuffleAnswersBySortType
+          : this.shuffleAnswers,
+      type: this.type,
+      category: this.category,
+    };
+  }
 
-  // 問題を取得するメソッド, 問題内容, 解答と選択肢を一つの配列にまとめたものを渡す, カテゴリーや, typeも返す
+  private get shuffleAnswers() {
+    return [
+      this.correctAnswer.getValue,
+      ...this.alternativeAnswers.map((answer) => answer.getValue),
+    ].sort(() => Math.random() - 0.5);
+  }
 
-  // 解説を取得するメソッド
+  private get shuffleAnswersBySortType() {
+    const answers = [
+      ...this.correctAnswer.getValue,
+      ...this.alternativeAnswers.map((answer) => answer.getValue),
+    ];
+    const answerParts = answers.flat().toString().split(" ");
+    return answerParts.sort(() => Math.random() - 0.5);
+  }
+
+  public get getExplanation() {
+    return this.explanation.getValue;
+  }
+
+  private isCorrectAnswer(userAnswer: string | string[]): boolean {
+    switch (this.type) {
+      case questionTypes.select:
+        return this.isCorrectAnswerByselectType(userAnswer as string);
+      case questionTypes.multiple_choice:
+        return Array.isArray(userAnswer)
+          ? this.isCorrectAnswerBymultipleChoiceType(userAnswer as string[])
+          : false;
+      case questionTypes.sort:
+        return this.isCorrectAnswerByselectType(userAnswer as string);
+      default:
+        throw new Error("Invalid question type");
+    }
+  }
+
+  private isCorrectAnswerByselectType(userAnswer: string) {
+    return this.correctAnswer.getValue === userAnswer;
+  }
+
+  private isCorrectAnswerBymultipleChoiceType(userAnswer: string[]) {
+    return userAnswer.every((answer) =>
+      this.correctAnswer.getValue.split(" ").includes(answer),
+    );
+  }
+
+  /**
+   * 問題に解答する
+   * @param userAnswer ユーザーの解答 | ユーザーの選択した複数の選択肢
+   * @returns 解答結果
+   */
+  public answerQuestion(userAnswer: string | string[]): boolean {
+    // スキップ状態で問題を解答することはできない
+    if (this.state === questionState.skipped) {
+      throw new Error("This question has been skipped");
+    }
+
+    const result = this.isCorrectAnswer(userAnswer);
+
+    // 苦手問題として登録されている状態で正答すると、Active状態に戻る
+    if (result && this.state === questionState.difficult) {
+      this.setState = questionState.active;
+    }
+
+    /**
+     * 問題に間違えるたびに状態を変更
+     * Active -> Retry
+     * Retry -> LastAttempt
+     * LastAttempt -> Skipped
+     */
+    switch (this.getState) {
+      case questionState.active:
+        this.setState = questionState.retry;
+        break;
+      case questionState.retry:
+        this.setState = questionState.last_attempt;
+        break;
+      case questionState.last_attempt:
+        this.setState = questionState.skipped;
+        break;
+      default:
+        throw new Error("Invalid question state");
+    }
+
+    return result;
+  }
 }
