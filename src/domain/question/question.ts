@@ -131,7 +131,7 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     );
   }
 
-  private get getState(): State {
+  public get getState(): State {
     return this.state;
   }
 
