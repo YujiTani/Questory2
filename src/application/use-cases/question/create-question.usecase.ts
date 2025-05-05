@@ -17,6 +17,7 @@ export class CreateQuestionUseCase {
       dto.explanation,
       dto.type,
       dto.state,
+      dto.category,
     );
 
     // エラーハンドリングはquestionRepositoryの中で行う

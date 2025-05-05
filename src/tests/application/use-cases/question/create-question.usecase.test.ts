@@ -136,6 +136,7 @@ describe("create-question.usecase.tsのテスト", () => {
       "ACTIVE",
       "TYPESCRIPT",
     )
+
     const mockQuestionReositoy = {
       save: mock(async () => questionEntity)
     }
@@ -159,15 +160,14 @@ describe("create-question.usecase.tsのテスト", () => {
     );
 
     const expected = {
-      text: "test question",
-      correctAnswer: "SELECT * From users",
+      text: "TypeScriptの型について、正しい説明はどれですか？",
+      correctAnswer: "TypeScriptはJavaScriptに静的型付けを追加した言語で、変数の型を事前に宣言できます。",
       alternativeAnswers: [
-        "SELECT ALL FROM table_name",
-        "SELECT COLUMNS FROM table_name",
-        "GET * FROM table_name",
+        "TypeScriptはJavaScriptとまったく異なる別の言語で、互換性はありません。",
+        "TypeScriptは型の宣言が必須で、動的型付けはサポートしていません。",
+        "TypeScriptはCSSフレームワークの一種です。"
       ],
-      explanation:
-        "SELECT文では * を使用することで全てのカラムを選択できます。",
+      explanation: "TypeScriptはJavaScriptのスーパーセットで、JavaScriptに静的型付けのシステムを追加した言語です。すべての有効なJavaScriptコードは有効なTypeScriptコードでもあり、型注釈はオプションです。",
       type: "SORT",
       state: "ACTIVE",
       category: "TYPESCRIPT",
