@@ -2,7 +2,7 @@ import {
   DeletedAt,
   type UpdatedAt,
   type CreatedAt,
-} from "@/domain/common/date.value-objects";
+} from "@/domain/value-objects/common/date.value-objects";
 
 /**
  * 監査情報エンティティー

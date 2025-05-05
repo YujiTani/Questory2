@@ -1,4 +1,4 @@
-import { Text } from "@/domain/common/text.value-objects";
+import { Text } from "@/domain/value-objects/common/text.value-objects";
 
 export class QuestionText extends Text {
   protected validate(): void {

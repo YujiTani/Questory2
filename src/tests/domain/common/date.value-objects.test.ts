@@ -5,7 +5,7 @@ import {
   CreatedAt,
   UpdatedAt,
   DeletedAt,
-} from "@/domain/common/date.value-objects";
+} from "@/domain/value-objects/common/date.value-objects";
 
 class TestDate extends DateValueObject {
   static create(date: Date): TestDate {

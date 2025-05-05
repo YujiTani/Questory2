@@ -1,6 +1,6 @@
 import { test, expect, describe } from "bun:test";
 
-import { Id } from "@/domain/common/id.value-objects";
+import { Id } from "@/domain/value-objects/common/id.value-objects";
 
 class TestId extends Id {
   static create(value: string): TestId {

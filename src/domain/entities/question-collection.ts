@@ -1,11 +1,11 @@
-import { AuditableEntity } from "../common/auditable";
-import { CreatedAt, DeletedAt, UpdatedAt } from "../common/date.value-objects";
-import { type Name } from "../common/text.value-objects";
+import { AuditableEntity } from "../entities/auditable";
+import { CreatedAt, DeletedAt, UpdatedAt } from "../value-objects/common/date.value-objects";
+import { type Name } from "../value-objects/common/text.value-objects";
 import {
   questionCategory,
   type QuestionCategory,
   type QuestionEntity,
-} from "../question/question";
+} from "../entities/question";
 
 import { QuestionCollectionId } from "./id.value-objects";
 

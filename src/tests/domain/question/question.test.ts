@@ -1,10 +1,10 @@
 import { test, expect, describe, beforeEach, afterEach } from "bun:test";
 
-import { CreatedAt, UpdatedAt } from "@/domain/common/date.value-objects";
-import { Description } from "@/domain/common/text.value-objects";
-import { QuestionId } from "@/domain/question/id.value-objects";
-import { QuestionEntity } from "@/domain/question/question";
-import { QuestionText } from "@/domain/question/text.value-objects";
+import { CreatedAt, UpdatedAt } from "@/domain/value-objects/common/date.value-objects";
+import { Description } from "@/domain/value-objects/common/text.value-objects";
+import { QuestionId } from "@/domain/value-objects/question/id.value-objects";
+import { QuestionEntity } from "@/domain/entities/question";
+import { QuestionText } from "@/domain/value-objects/question/text.value-objects";
 
 describe("QuestionEntity", () => {
   // テスト用のデータ

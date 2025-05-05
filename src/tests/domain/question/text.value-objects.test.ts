@@ -1,6 +1,6 @@
 import { test, expect, describe } from "bun:test";
 
-import { QuestionText } from "@/domain/question/text.value-objects";
+import { QuestionText } from "@/domain/value-objects/question/text.value-objects";
 
 describe("QuestionText Value Object", () => {
   test("QuestionTextを生成できる", () => {

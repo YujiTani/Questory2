@@ -1,12 +1,8 @@
-import { AuditableEntity } from "@/domain/common/auditable";
-import {
-  CreatedAt,
-  DeletedAt,
-  UpdatedAt,
-} from "@/domain/common/date.value-objects";
-import { Description } from "@/domain/common/text.value-objects";
-import { QuestionId } from "@/domain/question/id.value-objects";
-import { QuestionText } from "@/domain/question/text.value-objects";
+import { AuditableEntity } from "@/domain/entities/auditable";
+import { CreatedAt, DeletedAt, UpdatedAt } from "@/domain/value-objects/common/date.value-objects";
+import { Description } from "@/domain/value-objects/common/text.value-objects";
+import { QuestionId } from "@/domain/value-objects/question/id.value-objects";
+import { QuestionText } from "@/domain/value-objects/question/text.value-objects";
 
 /**
  * 問題の出題形式
