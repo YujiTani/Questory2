@@ -183,25 +183,25 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
   private isCorrectAnswer(userAnswer: string | string[]): boolean {
     switch (this.type) {
       case questionTypes.select:
-        return this.isCorrectAnswerByselectType(userAnswer as string);
+        return this.isCorrectAnswerBySelectType(userAnswer as string);
       case questionTypes.multiple_choice:
         return Array.isArray(userAnswer)
-          ? this.isCorrectAnswerBymultipleChoiceType(userAnswer as string[])
+          ? this.isCorrectAnswerByMultipleChoiceType(userAnswer as string[])
           : false;
       case questionTypes.sort:
-        return this.isCorrectAnswerByselectType(userAnswer as string);
+        return this.isCorrectAnswerBySelectType(userAnswer as string);
       default:
         throw new Error("Invalid question type");
     }
   }
 
-  private isCorrectAnswerByselectType(userAnswer: string) {
-    return this.correctAnswer.getValue === userAnswer;
+  private isCorrectAnswerBySelectType(userAnswer: string) {
+    return this.correctAnswer[0].getValue === userAnswer;
   }
 
-  private isCorrectAnswerBymultipleChoiceType(userAnswer: string[]) {
-    return userAnswer.every((answer) =>
-      this.correctAnswer.getValue.split(" ").includes(answer),
+  private isCorrectAnswerByMultipleChoiceType(userAnswer: string[]) {
+    const correctAnswerValues = this.correctAnswer.map(answer => answer.getValue);
+    return userAnswer.every((answer) => correctAnswerValues.includes(answer)
     );
   }
 
@@ -249,7 +249,7 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
   toDTO() {
     return {
       text: this.text.getValue,
-      correctAnswer: this.correctAnswer.getValue,
+      correctAnswer: this.correctAnswer.map(a => a.getValue),
       alternativeAnswers: this.alternativeAnswers.map(a => a.getValue),
       explanation: this.explanation.getValue,
       type: this.type,

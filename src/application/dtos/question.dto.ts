@@ -2,7 +2,7 @@ import type { QuestionCategory, QuestionState, QuestionType } from "@/domain/ent
 
 export interface CreateQuestionDto {
   text: string;
-  correctAnswer: string;
+  correctAnswer: string[];
   alternativeAnswers: string[];
   explanation: string;
   type?: QuestionType;

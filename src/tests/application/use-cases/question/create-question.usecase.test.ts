@@ -10,7 +10,7 @@ describe("create-question.usecase.tsのテスト", () => {
   
     const questionEntity = QuestionEntity.create(
       "test question",
-      "SELECT * From users",
+      ["SELECT * From users"],
       [
         "SELECT ALL FROM table_name",
         "SELECT COLUMNS FROM table_name",
@@ -28,7 +28,7 @@ describe("create-question.usecase.tsのテスト", () => {
     const result = await createQuestionUseCase.execute(
       {
       text: "test question",
-      correctAnswer: "SELECT * From users",
+      correctAnswer: ["SELECT * From users"],
       alternativeAnswers: [
         "SELECT ALL FROM table_name",
         "SELECT COLUMNS FROM table_name",
@@ -65,7 +65,7 @@ describe("create-question.usecase.tsのテスト", () => {
   
     const questionEntity = QuestionEntity.create(
       "test question",
-      "SELECT * From users",
+      ["SELECT * From users"],
       [
         "SELECT ALL FROM table_name",
         "SELECT COLUMNS FROM table_name",
@@ -85,7 +85,7 @@ describe("create-question.usecase.tsのテスト", () => {
     const result = await createQuestionUseCase.execute(
       {
       text: "test question",
-      correctAnswer: "SELECT * From users",
+      correctAnswer: ["SELECT * From users"],
       alternativeAnswers: [
         "SELECT ALL FROM table_name",
         "SELECT COLUMNS FROM table_name",
@@ -125,7 +125,7 @@ describe("create-question.usecase.tsのテスト", () => {
   
     const questionEntity = QuestionEntity.create(
       "TypeScriptの型について、正しい説明はどれですか？",
-      "TypeScriptはJavaScriptに静的型付けを追加した言語で、変数の型を事前に宣言できます。",
+      ["TypeScriptはJavaScriptに静的型付けを追加した言語で、変数の型を事前に宣言できます。"],
       [
         "TypeScriptはJavaScriptとまったく異なる別の言語で、互換性はありません。",
         "TypeScriptは型の宣言が必須で、動的型付けはサポートしていません。",
@@ -146,7 +146,7 @@ describe("create-question.usecase.tsのテスト", () => {
     const result = await createQuestionUseCase.execute(
       {
       text: "TypeScriptの型について、正しい説明はどれですか？",
-      correctAnswer: "TypeScriptはJavaScriptに静的型付けを追加した言語で、変数の型を事前に宣言できます。",
+      correctAnswer: ["TypeScriptはJavaScriptに静的型付けを追加した言語で、変数の型を事前に宣言できます。"],
       alternativeAnswers: [
         "TypeScriptはJavaScriptとまったく異なる別の言語で、互換性はありません。",
         "TypeScriptは型の宣言が必須で、動的型付けはサポートしていません。",
