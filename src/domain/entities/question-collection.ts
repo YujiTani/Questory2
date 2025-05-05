@@ -1,13 +1,12 @@
-import { AuditableEntity } from "../entities/auditable";
-import { CreatedAt, DeletedAt, UpdatedAt } from "../value-objects/common/date.value-objects";
-import { type Name } from "../value-objects/common/text.value-objects";
+import { AuditableEntity } from "@/domain/entities/auditable";
 import {
   questionCategory,
   type QuestionCategory,
   type QuestionEntity,
-} from "../entities/question";
-
-import { QuestionCollectionId } from "./id.value-objects";
+} from "@/domain/entities/question";
+import { CreatedAt, DeletedAt, UpdatedAt } from "@/domain/value-objects/common/date.value-objects";
+import { type Name } from "@/domain/value-objects/common/text.value-objects";
+import { QuestionCollectionId } from "@/domain/value-objects/question-collection/id.value-objects";
 
 export const questionCollectionState = {
   active: "ACTIVE",

@@ -1,7 +1,7 @@
 import { test, expect, describe } from "bun:test";
 
-import { QuestionCollectionName } from "@/domain/quest-collection/text.value-objects";
 import { Name } from "@/domain/value-objects/common/text.value-objects";
+import { QuestionCollectionName } from "@/domain/value-objects/question-collection/text.value-objects";
 
 describe("QuestionCollectionName Value Object", () => {
   test("QuestionCollectionNameを生成できる", () => {
