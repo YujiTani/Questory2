@@ -12,8 +12,8 @@ const res = await client.api.users.$post({
 });
 
 if (res.ok) {
-  const user = await res.json();
-  console.log(res.status, "post success", user);
+  // const user = await res.json();
+  // console.log(res.status, "post success", user);
 } else {
-  console.log(res.status, "post error");
+  // console.log(res.status, "post error");
 }
