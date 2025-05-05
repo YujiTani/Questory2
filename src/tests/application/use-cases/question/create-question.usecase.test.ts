@@ -37,7 +37,6 @@ describe("create-question.usecase.tsのテスト", () => {
       explanation: "SELECT文では * を使用することで全てのカラムを選択できます。",
       }
     );
-    // 意図した通りの問題が作成できていること
 
     const expected = {
       text: "test question",
@@ -59,4 +58,8 @@ describe("create-question.usecase.tsのテスト", () => {
 
     expect(result.toDTO()).toEqual(expect.objectContaining(expected));
   });
+
+  test("カテゴリー:SQL、タイプ:SELECTで問題を作成できる", () => {})
+  test("カテゴリー:TYPESCRIPT、タイプ:SORTで問題を作成できる", () => {})
+  test("カテゴリー:HTTP、タイプ:MULTIPLE_CHOICEで問題を作成できる", () => {})
 });
