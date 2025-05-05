@@ -4,7 +4,11 @@ import {
   type QuestionCategory,
   type QuestionEntity,
 } from "@/domain/entities/question";
-import { CreatedAt, DeletedAt, UpdatedAt } from "@/domain/value-objects/common/date.value-objects";
+import {
+  CreatedAt,
+  DeletedAt,
+  UpdatedAt,
+} from "@/domain/value-objects/common/date.value-objects";
 import { type Name } from "@/domain/value-objects/common/text.value-objects";
 import { QuestionCollectionId } from "@/domain/value-objects/question-collection/id.value-objects";
 

@@ -1,6 +1,10 @@
 import { test, expect, describe } from "bun:test";
 
-import { Text, Name, Description } from "@/domain/value-objects/common/text.value-objects";
+import {
+  Text,
+  Name,
+  Description,
+} from "@/domain/value-objects/common/text.value-objects";
 
 class TestText extends Text {
   protected validate(): void {
