@@ -55,7 +55,7 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
   protected constructor(
     id: QuestionId,
     private text: QuestionText,
-    private correctAnswer: QuestionText,
+    private correctAnswer: QuestionText[],
     private alternativeAnswers: QuestionText[],
     private explanation: Description,
     private type: QuestionType, // default: select
@@ -73,17 +73,21 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
    */
   static create(
     text: string,
-    correctAnswer: string,
+    correctAnswer: string[],
     alternativeAnswers: string[],
     explanation: string,
     type: QuestionType = questionTypes.select,
     state: QuestionState = questionState.active,
     category: QuestionCategory = questionCategory.sql,
   ): QuestionEntity {
+    if (type !== "MULTIPLE_CHOICE" && correctAnswer.length > 1 ) {
+      throw new Error("MULTIPLE_CHOICE以外のtypeでは、解答は一つしか許されない")
+    }
+
     return new QuestionEntity(
       QuestionId.create(),
       QuestionText.create(text),
-      QuestionText.create(correctAnswer),
+      correctAnswer.map((answer) => QuestionText.create(answer)),
       alternativeAnswers.map((answer) => QuestionText.create(answer)),
       Description.create(explanation),
       type,
@@ -102,7 +106,7 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
   static reconstruct(
     id: QuestionId,
     text: QuestionText,
-    correctAnswer: QuestionText,
+    correctAnswer: QuestionText[],
     alternativeAnswers: QuestionText[],
     explanation: Description,
     type: QuestionType,
@@ -112,6 +116,10 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     updatedAt: UpdatedAt,
     deletedAt: DeletedAt | null,
   ): QuestionEntity {
+    if (type !== "MULTIPLE_CHOICE" && correctAnswer.length > 1 ) {
+      throw new Error("MULTIPLE_CHOICE以外のtypeでは、解答は一つしか許されない")
+    }
+
     return new QuestionEntity(
       id,
       text,
@@ -154,14 +162,14 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
 
   private get shuffleAnswers() {
     return [
-      this.correctAnswer.getValue,
+      ...this.correctAnswer.map(answer => answer.getValue),
       ...this.alternativeAnswers.map((answer) => answer.getValue),
     ].sort(() => Math.random() - 0.5);
   }
 
   private get shuffleAnswersBySortType() {
     const answers = [
-      ...this.correctAnswer.getValue,
+      ...this.correctAnswer.map(answer => answer.getValue),
       ...this.alternativeAnswers.map((answer) => answer.getValue),
     ];
     const answerParts = answers.flat().toString().split(" ");
