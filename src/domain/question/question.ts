@@ -50,7 +50,7 @@ export const questionState = {
   skipped: "SKIPPED",
   difficult: "DIFFICULT",
 } as const;
-export type State = (typeof questionState)[keyof typeof questionState];
+export type QuestionState = (typeof questionState)[keyof typeof questionState];
 
 /**
  * 問題エンティティー
@@ -63,7 +63,7 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     private alternativeAnswers: QuestionText[],
     private explanation: Description,
     private type: QuestionType, // default: select
-    private state: State, // default: active
+    private state: QuestionState, // default: active
     private category: QuestionCategory, // default: SQL
     createdAt: CreatedAt,
     updatedAt: UpdatedAt,
@@ -81,7 +81,7 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     alternativeAnswers: string[],
     explanation: string,
     type: QuestionType = questionTypes.select,
-    state: State = questionState.active,
+    state: QuestionState = questionState.active,
     category: QuestionCategory = questionCategory.sql,
   ): QuestionEntity {
     return new QuestionEntity(
@@ -110,7 +110,7 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     alternativeAnswers: QuestionText[],
     explanation: Description,
     type: QuestionType,
-    state: State,
+    state: QuestionState,
     category: QuestionCategory,
     createdAt: CreatedAt,
     updatedAt: UpdatedAt,
@@ -131,11 +131,11 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     );
   }
 
-  public get getState(): State {
+  public get getState(): QuestionState {
     return this.state;
   }
 
-  private set setState(newState: State) {
+  private set setState(newState: QuestionState) {
     this.state = newState;
     this.updatedAt.update();
   }
