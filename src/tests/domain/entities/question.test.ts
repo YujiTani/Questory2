@@ -12,7 +12,7 @@ import { QuestionText } from "@/domain/value-objects/question/text.value-objects
 describe("QuestionEntity", () => {
   // テスト用のデータ
   const sampleText = "SQLのSELECT文で全てのカラムを選択するには？";
-  const sampleCorrectAnswer = "SELECT * FROM table_name";
+  const sampleCorrectAnswer = ["SELECT * FROM table_name"];
   const sampleAlternativeAnswers = [
     "SELECT ALL FROM table_name",
     "SELECT COLUMNS FROM table_name",
@@ -70,7 +70,7 @@ describe("QuestionEntity", () => {
     test("reconstruct() - 問題を復元できる", () => {
       const id = QuestionId.create();
       const text = QuestionText.create(sampleText);
-      const correctAnswer = QuestionText.create(sampleCorrectAnswer);
+      const correctAnswer =  sampleCorrectAnswer.map(a => QuestionText.create(a))
       const alternativeAnswers = sampleAlternativeAnswers.map((a) =>
         QuestionText.create(a),
       );
@@ -142,7 +142,7 @@ describe("QuestionEntity", () => {
     test("answerQuestion - multiple_choiceタイプの問題で正解の場合", () => {
       const multipleChoiceQuestion = QuestionEntity.create(
         "TypeScriptの基本型を選択してください",
-        "string number boolean",
+        ["string number boolean"],
         ["object array function", "any unknown never"],
         "TypeScriptの基本型はstring, number, booleanです。",
         "MULTIPLE_CHOICE",
@@ -159,7 +159,7 @@ describe("QuestionEntity", () => {
     test("answerQuestion - multiple_choiceタイプの問題で不正解の場合", () => {
       const multipleChoiceQuestion = QuestionEntity.create(
         "TypeScriptの基本型を選択してください",
-        "string number boolean",
+        ["string number boolean"],
         ["object array function", "any unknown never"],
         "TypeScriptの基本型はstring, number, booleanです。",
         "MULTIPLE_CHOICE",
@@ -176,7 +176,7 @@ describe("QuestionEntity", () => {
       const invalidQuestion = QuestionEntity.reconstruct(
         QuestionId.create(),
         QuestionText.create(sampleText),
-        QuestionText.create(sampleCorrectAnswer),
+        sampleCorrectAnswer.map(a => QuestionText.create(a)),
         sampleAlternativeAnswers.map((a) => QuestionText.create(a)),
         Description.create(sampleExplanation),
         // @ts-expect-error 不正なタイプを指定
@@ -243,7 +243,7 @@ describe("QuestionEntity", () => {
       const invalidQuestion = QuestionEntity.reconstruct(
         QuestionId.create(),
         QuestionText.create(sampleText),
-        QuestionText.create(sampleCorrectAnswer),
+        sampleCorrectAnswer.map(a => QuestionText.create(a)),
         sampleAlternativeAnswers.map((a) => QuestionText.create(a)),
         Description.create(sampleExplanation),
         "SELECT",
