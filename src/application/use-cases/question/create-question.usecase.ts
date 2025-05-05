@@ -3,7 +3,6 @@ import type { QuestionRepository } from "@/domain/repositories/question.reposito
 
 import { QuestionEntity } from "@/domain/entities/question";
 
-
 export class CreateQuestionUseCase {
   constructor(private questionRepository: QuestionRepository) {}
 
@@ -21,7 +20,7 @@ export class CreateQuestionUseCase {
     );
 
     // エラーハンドリングはquestionRepositoryの中で行う
-    await this.questionRepository.save(question)
-    return question
+    await this.questionRepository.save(question);
+    return question;
   }
 }

@@ -70,7 +70,9 @@ describe("QuestionEntity", () => {
     test("reconstruct() - 問題を復元できる", () => {
       const id = QuestionId.create();
       const text = QuestionText.create(sampleText);
-      const correctAnswer =  sampleCorrectAnswer.map(a => QuestionText.create(a))
+      const correctAnswer = sampleCorrectAnswer.map((a) =>
+        QuestionText.create(a),
+      );
       const alternativeAnswers = sampleAlternativeAnswers.map((a) =>
         QuestionText.create(a),
       );
@@ -176,7 +178,7 @@ describe("QuestionEntity", () => {
       const invalidQuestion = QuestionEntity.reconstruct(
         QuestionId.create(),
         QuestionText.create(sampleText),
-        sampleCorrectAnswer.map(a => QuestionText.create(a)),
+        sampleCorrectAnswer.map((a) => QuestionText.create(a)),
         sampleAlternativeAnswers.map((a) => QuestionText.create(a)),
         Description.create(sampleExplanation),
         // @ts-expect-error 不正なタイプを指定
@@ -243,7 +245,7 @@ describe("QuestionEntity", () => {
       const invalidQuestion = QuestionEntity.reconstruct(
         QuestionId.create(),
         QuestionText.create(sampleText),
-        sampleCorrectAnswer.map(a => QuestionText.create(a)),
+        sampleCorrectAnswer.map((a) => QuestionText.create(a)),
         sampleAlternativeAnswers.map((a) => QuestionText.create(a)),
         Description.create(sampleExplanation),
         "SELECT",

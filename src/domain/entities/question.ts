@@ -1,5 +1,9 @@
 import { AuditableEntity } from "@/domain/entities/auditable";
-import { CreatedAt, DeletedAt, UpdatedAt } from "@/domain/value-objects/common/date.value-objects";
+import {
+  CreatedAt,
+  DeletedAt,
+  UpdatedAt,
+} from "@/domain/value-objects/common/date.value-objects";
 import { Description } from "@/domain/value-objects/common/text.value-objects";
 import { QuestionId } from "@/domain/value-objects/question/id.value-objects";
 import { QuestionText } from "@/domain/value-objects/question/text.value-objects";
@@ -80,8 +84,10 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     state: QuestionState = questionState.active,
     category: QuestionCategory = questionCategory.sql,
   ): QuestionEntity {
-    if (type !== "MULTIPLE_CHOICE" && correctAnswer.length > 1 ) {
-      throw new Error("MULTIPLE_CHOICE以外のtypeでは、解答は一つしか許されない")
+    if (type !== "MULTIPLE_CHOICE" && correctAnswer.length > 1) {
+      throw new Error(
+        "MULTIPLE_CHOICE以外のtypeでは、解答は一つしか許されない",
+      );
     }
 
     return new QuestionEntity(
@@ -116,8 +122,10 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     updatedAt: UpdatedAt,
     deletedAt: DeletedAt | null,
   ): QuestionEntity {
-    if (type !== "MULTIPLE_CHOICE" && correctAnswer.length > 1 ) {
-      throw new Error("MULTIPLE_CHOICE以外のtypeでは、解答は一つしか許されない")
+    if (type !== "MULTIPLE_CHOICE" && correctAnswer.length > 1) {
+      throw new Error(
+        "MULTIPLE_CHOICE以外のtypeでは、解答は一つしか許されない",
+      );
     }
 
     return new QuestionEntity(
@@ -162,14 +170,14 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
 
   private get shuffleAnswers() {
     return [
-      ...this.correctAnswer.map(answer => answer.getValue),
+      ...this.correctAnswer.map((answer) => answer.getValue),
       ...this.alternativeAnswers.map((answer) => answer.getValue),
     ].sort(() => Math.random() - 0.5);
   }
 
   private get shuffleAnswersBySortType() {
     const answers = [
-      ...this.correctAnswer.map(answer => answer.getValue),
+      ...this.correctAnswer.map((answer) => answer.getValue),
       ...this.alternativeAnswers.map((answer) => answer.getValue),
     ];
     const answerParts = answers.flat().toString().split(" ");
@@ -200,9 +208,10 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
   }
 
   private isCorrectAnswerByMultipleChoiceType(userAnswer: string[]) {
-    const correctAnswerValues = this.correctAnswer.map(answer => answer.getValue);
-    return userAnswer.every((answer) => correctAnswerValues.includes(answer)
+    const correctAnswerValues = this.correctAnswer.map(
+      (answer) => answer.getValue,
     );
+    return userAnswer.every((answer) => correctAnswerValues.includes(answer));
   }
 
   /**
@@ -249,8 +258,8 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
   toDTO() {
     return {
       text: this.text.getValue,
-      correctAnswer: this.correctAnswer.map(a => a.getValue),
-      alternativeAnswers: this.alternativeAnswers.map(a => a.getValue),
+      correctAnswer: this.correctAnswer.map((a) => a.getValue),
+      alternativeAnswers: this.alternativeAnswers.map((a) => a.getValue),
       explanation: this.explanation.getValue,
       type: this.type,
       state: this.state,
@@ -258,6 +267,6 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
       createdAt: this.createdAt.toISOString(),
       updatedAt: this.updatedAt.toISOString(),
       deletedAt: this.deletedAt?.toISOString() || null,
-    }
+    };
   }
 }

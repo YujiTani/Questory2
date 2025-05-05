@@ -1,4 +1,8 @@
-import type { QuestionCategory, QuestionState, QuestionType } from "@/domain/entities/question";
+import type {
+  QuestionCategory,
+  QuestionState,
+  QuestionType,
+} from "@/domain/entities/question";
 
 export interface CreateQuestionDto {
   text: string;
