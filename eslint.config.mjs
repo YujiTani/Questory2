@@ -150,6 +150,7 @@ export default [
       "no-unused-expressions": "off",
       "max-classes-per-file": "off",
       "no-useless-constructor": "off",
+      "import/no-unresolved": "off",
     },
   },
 ];
