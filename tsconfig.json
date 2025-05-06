@@ -43,6 +43,7 @@
     "src/**/*.tsx",
     "src/**/*.mts",
     "types/**/*.d.ts",
-    "eslint.config.mjs"
+    "eslint.config.mjs",
+    "context.ts",
   ]
 }
