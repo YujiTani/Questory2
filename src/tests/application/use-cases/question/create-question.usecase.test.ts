@@ -1,14 +1,32 @@
-import { test, expect, describe, mock, setSystemTime } from "bun:test";
+import { test, expect, describe, mock, setSystemTime, beforeEach } from "bun:test";
+
+import type { QuestionRepository } from "@/domain/repositories/question.repository";
 
 import { CreateQuestionUseCase } from "@/application/use-cases/question/create-question.usecase";
 import { QuestionEntity } from "@/domain/entities/question";
 
 describe("create-question.usecase.tsのテスト", () => {
-  test("デフォルト設定で、問題が作成できる", async () => {
-    const date = new Date("2025-01-01T12:00:00Z");
+  let questionEntity: QuestionEntity
+  let mockQuestionReositoy :QuestionRepository
+  let createQuestionUseCase: CreateQuestionUseCase
+  const date = new Date("2025-01-01T12:00:00Z");
+  
+  beforeEach(() => {
     setSystemTime(date);
 
-    const questionEntity = QuestionEntity.create(
+    mockQuestionReositoy = {
+      save: mock(async () => questionEntity),
+      findById: mock(async () => questionEntity),
+    }
+
+    createQuestionUseCase = new CreateQuestionUseCase(
+      mockQuestionReositoy,
+    );
+  })
+
+  test("デフォルト設定で、問題が作成できる", async () => {
+  beforeEach(() => {
+    questionEntity = QuestionEntity.create(
       "test question",
       ["SELECT * From users"],
       [
@@ -18,13 +36,7 @@ describe("create-question.usecase.tsのテスト", () => {
       ],
       "SELECT文では * を使用することで全てのカラムを選択できます。",
     );
-    const mockQuestionReositoy = {
-      save: mock(async () => questionEntity),
-    };
-
-    const createQuestionUseCase = new CreateQuestionUseCase(
-      mockQuestionReositoy,
-    );
+  })
 
     const result = await createQuestionUseCase.execute({
       text: "test question",
@@ -40,7 +52,7 @@ describe("create-question.usecase.tsのテスト", () => {
 
     const expected = {
       text: "test question",
-      correctAnswer: "SELECT * From users",
+      correctAnswer: ["SELECT * From users"],
       alternativeAnswers: [
         "SELECT ALL FROM table_name",
         "SELECT COLUMNS FROM table_name",
@@ -60,10 +72,8 @@ describe("create-question.usecase.tsのテスト", () => {
   });
 
   test("カテゴリー:SQL、タイプ:SELECTで問題を作成できる", async () => {
-    const date = new Date("2025-01-01T12:00:00Z");
-    setSystemTime(date);
-
-    const questionEntity = QuestionEntity.create(
+    beforeEach(() => {
+    questionEntity = QuestionEntity.create(
       "test question",
       ["SELECT * From users"],
       [
@@ -76,13 +86,7 @@ describe("create-question.usecase.tsのテスト", () => {
       "ACTIVE",
       "SQL",
     );
-    const mockQuestionReositoy = {
-      save: mock(async () => questionEntity),
-    };
-
-    const createQuestionUseCase = new CreateQuestionUseCase(
-      mockQuestionReositoy,
-    );
+    })
 
     const result = await createQuestionUseCase.execute({
       text: "test question",
@@ -101,7 +105,7 @@ describe("create-question.usecase.tsのテスト", () => {
 
     const expected = {
       text: "test question",
-      correctAnswer: "SELECT * From users",
+      correctAnswer: ["SELECT * From users"],
       alternativeAnswers: [
         "SELECT ALL FROM table_name",
         "SELECT COLUMNS FROM table_name",
@@ -121,10 +125,8 @@ describe("create-question.usecase.tsのテスト", () => {
   });
 
   test("カテゴリー:TYPESCRIPT、タイプ:SORTで問題を作成できる", async () => {
-    const date = new Date("2025-01-01T12:00:00Z");
-    setSystemTime(date);
-
-    const questionEntity = QuestionEntity.create(
+    beforeEach(() => {
+    questionEntity = QuestionEntity.create(
       "TypeScriptの型について、正しい説明はどれですか？",
       [
         "TypeScriptはJavaScriptに静的型付けを追加した言語で、変数の型を事前に宣言できます。",
@@ -139,14 +141,7 @@ describe("create-question.usecase.tsのテスト", () => {
       "ACTIVE",
       "TYPESCRIPT",
     );
-
-    const mockQuestionReositoy = {
-      save: mock(async () => questionEntity),
-    };
-
-    const createQuestionUseCase = new CreateQuestionUseCase(
-      mockQuestionReositoy,
-    );
+    })
 
     const result = await createQuestionUseCase.execute({
       text: "TypeScriptの型について、正しい説明はどれですか？",
@@ -168,7 +163,7 @@ describe("create-question.usecase.tsのテスト", () => {
     const expected = {
       text: "TypeScriptの型について、正しい説明はどれですか？",
       correctAnswer:
-        "TypeScriptはJavaScriptに静的型付けを追加した言語で、変数の型を事前に宣言できます。",
+        ["TypeScriptはJavaScriptに静的型付けを追加した言語で、変数の型を事前に宣言できます。"],
       alternativeAnswers: [
         "TypeScriptはJavaScriptとまったく異なる別の言語で、互換性はありません。",
         "TypeScriptは型の宣言が必須で、動的型付けはサポートしていません。",
@@ -187,10 +182,8 @@ describe("create-question.usecase.tsのテスト", () => {
     expect(result.toDTO()).toEqual(expect.objectContaining(expected));
   });
   test("カテゴリー:HTTP、タイプ:MULTIPLE_CHOICEで問題を作成できる", async () => {
-    const date = new Date("2025-01-01T12:00:00Z");
-    setSystemTime(date);
-
-    const questionEntity = QuestionEntity.create(
+    beforeEach( () => {
+    questionEntity = QuestionEntity.create(
       "HTTPステータスコードのうち、クライアントエラーを示すものはどれですか？（複数選択）",
       ["404 Not Found", "400 Bad Request"],
       ["200 OK", "301 Moved Permanently", "500 Internal Server Error"],
@@ -199,13 +192,7 @@ describe("create-question.usecase.tsのテスト", () => {
       "ACTIVE",
       "HTTP",
     );
-    const mockQuestionReositoy = {
-      save: mock(async () => questionEntity),
-    };
-
-    const createQuestionUseCase = new CreateQuestionUseCase(
-      mockQuestionReositoy,
-    );
+    })
 
     const result = await createQuestionUseCase.execute({
       text: "HTTPステータスコードのうち、クライアントエラーを示すものはどれですか？（複数選択）",
