@@ -26,6 +26,8 @@ describe("sql-question.repository.tsのテスト", () => {
 
     // then (結果) : 操作した結果
     // DBへの保存が成功したことをチェックしたい
+
+    // FIXME: ここに返すのはEntityなのか？DB登録に使うのはDTOのはず？DTOからentityに戻すにはreconstructメソッドを使うように設計したい
     expect(foundQuestion.id).toBe(question.getId);
     expect(foundQuestion.text).toBe(question.text);
     expect(foundQuestion.correctAnswer).toBe(question.correctAnswer);
