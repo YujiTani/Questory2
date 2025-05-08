@@ -143,6 +143,23 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     );
   }
 
+  // エンティティーを外部用データに変換
+  toDTO() {
+    return {
+      id: this.id.getValue,
+      text: this.text.getValue,
+      correctAnswer: this.correctAnswer.map((a) => a.getValue),
+      alternativeAnswers: this.alternativeAnswers.map((a) => a.getValue),
+      explanation: this.explanation.getValue,
+      type: this.type,
+      state: this.state,
+      category: this.category,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
+      deletedAt: this.deletedAt?.toISOString() || null,
+    };
+  }
+
   public get getState(): QuestionState {
     return this.state;
   }
@@ -253,20 +270,5 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     }
 
     return result;
-  }
-
-  toDTO() {
-    return {
-      text: this.text.getValue,
-      correctAnswer: this.correctAnswer.map((a) => a.getValue),
-      alternativeAnswers: this.alternativeAnswers.map((a) => a.getValue),
-      explanation: this.explanation.getValue,
-      type: this.type,
-      state: this.state,
-      category: this.category,
-      createdAt: this.createdAt.toISOString(),
-      updatedAt: this.updatedAt.toISOString(),
-      deletedAt: this.deletedAt?.toISOString() || null,
-    };
   }
 }
