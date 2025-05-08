@@ -9,7 +9,7 @@ import {
  */
 export abstract class AuditableEntity<TId> {
   protected constructor(
-    private readonly id: TId,
+    protected readonly id: TId,
     protected readonly createdAt: CreatedAt,
     protected updatedAt: UpdatedAt,
     protected deletedAt: DeletedAt | null,
