@@ -32,3 +32,22 @@ model User {
   createdAt DateTime @default(now())
   posts Post[]
 }
+
+model Question {
+  id Int @id @default(autoincrement())
+  uuid String @unique @default(uuid())
+  text String
+  correctAnswer String[] @map("correct_answer")
+  alternativeAnswers String[] @map("alternative_answers")
+  explanation String[]
+  type Int @db.SmallInt
+  state Int @db.SmallInt
+  category Int @db.SmallInt
+  createdAt BigInt @map("created_at")
+  updatedAt BigInt @map("updated_at")
+  deletedAt BigInt? @map("deleted_at")
+
+  @@index([deletedAt])
+  @@index([deletedAt, category])
+  @@index([deletedAt, state])
+}
