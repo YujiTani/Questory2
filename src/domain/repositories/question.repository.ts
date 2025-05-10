@@ -5,5 +5,5 @@ import type { QuestionId } from "@/domain/value-objects/question/id.value-object
 export interface QuestionRepository {
   // 必須メソッド
   save(question: QuestionEntity): Promise<void>;
-  findById(id: QuestionId): Promise<QuestionEntity>;
+  findByUuid(id: QuestionId): Promise<QuestionEntity>;
 }
