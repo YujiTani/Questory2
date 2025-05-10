@@ -22,7 +22,7 @@ describe("create-question.usecase.tsのテスト", () => {
     setSystemTime(date);
 
     mockQuestionReositoy = {
-      save: mock(async () => questionEntity),
+      save: mock(async () => {}),
       findById: mock(async () => questionEntity),
     };
 
