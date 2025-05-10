@@ -9,26 +9,26 @@ import {
  */
 export abstract class AuditableEntity<TId> {
   protected constructor(
-    protected readonly id: TId,
-    protected readonly createdAt: CreatedAt,
-    protected updatedAt: UpdatedAt,
-    protected deletedAt: DeletedAt | null,
+    protected readonly _id: TId,
+    protected readonly _createdAt: CreatedAt,
+    protected _updatedAt: UpdatedAt,
+    protected _deletedAt: DeletedAt | null,
   ) {}
 
-  get getId(): TId {
-    return this.id;
+  get id(): TId {
+    return this._id;
   }
 
-  get getCreatedAt(): Date {
-    return this.createdAt.getValue;
+  get createdAt(): Date {
+    return this._createdAt.getValue;
   }
 
-  getUpdatedAt(): Date {
-    return this.updatedAt.getValue;
+  get updatedAt(): Date {
+    return this._updatedAt.getValue;
   }
 
-  getDeletedAt(): Date | null {
-    return this.deletedAt?.getValue || null;
+  get deletedAt(): Date | null {
+    return this._deletedAt?.getValue || null;
   }
 
   isDeleted(): boolean {
@@ -36,14 +36,14 @@ export abstract class AuditableEntity<TId> {
   }
 
   updateTimestamp(): void {
-    this.updatedAt = this.updatedAt.update();
+    this._updatedAt = this._updatedAt.update();
   }
 
   delete(value: Date): void {
-    this.deletedAt = DeletedAt.create(value);
+    this._deletedAt = DeletedAt.create(value);
   }
 
   restore(): void {
-    this.deletedAt = null;
+    this._deletedAt = null;
   }
 }

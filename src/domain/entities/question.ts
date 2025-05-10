@@ -57,23 +57,23 @@ export type QuestionState = (typeof questionState)[keyof typeof questionState];
  */
 export class QuestionEntity extends AuditableEntity<QuestionId> {
   protected constructor(
-    id: QuestionId,
-    private text: QuestionText,
-    private correctAnswer: QuestionText[],
-    private alternativeAnswers: QuestionText[],
-    private explanation: Description,
-    private type: QuestionType, // default: select
-    private state: QuestionState, // default: active
-    private category: QuestionCategory, // default: SQL
-    createdAt: CreatedAt,
-    updatedAt: UpdatedAt,
-    deletedAt: DeletedAt | null = null,
+    _id: QuestionId,
+    private _text: QuestionText,
+    private _correctAnswer: QuestionText[],
+    private _alternativeAnswers: QuestionText[],
+    private _explanation: Description,
+    private _type: QuestionType, // default: select
+    private _state: QuestionState, // default: active
+    private _category: QuestionCategory, // default: SQL
+    _createdAt: CreatedAt,
+    _updatedAt: UpdatedAt,
+    _deletedAt: DeletedAt | null = null,
   ) {
-    super(id, createdAt, updatedAt, deletedAt);
+    super(_id, _createdAt, _updatedAt, _deletedAt);
   }
 
   /**
-   * 問題を作成
+   * 問題エンティティーを作成
    */
   static create(
     text: string,
@@ -105,68 +105,46 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     );
   }
 
-  /**
-   * 問題を復元
-   * DBから取得したデータを元に、問題エンティティーを復元
-   */
-  static reconstruct(
-    id: QuestionId,
-    text: QuestionText,
-    correctAnswer: QuestionText[],
-    alternativeAnswers: QuestionText[],
-    explanation: Description,
-    type: QuestionType,
-    state: QuestionState,
-    category: QuestionCategory,
-    createdAt: CreatedAt,
-    updatedAt: UpdatedAt,
-    deletedAt: DeletedAt | null,
-  ): QuestionEntity {
-    if (type !== "MULTIPLE_CHOICE" && correctAnswer.length > 1) {
-      throw new Error(
-        "MULTIPLE_CHOICE以外のtypeでは、解答は一つしか許されない",
-      );
-    }
-
-    return new QuestionEntity(
-      id,
-      text,
-      correctAnswer,
-      alternativeAnswers,
-      explanation,
-      type,
-      state,
-      category,
-      createdAt,
-      updatedAt,
-      deletedAt,
-    );
+  /** Getter */
+  get id(): QuestionId {
+    return this._id;
   }
 
-  // エンティティーを外部用データに変換
-  toDTO() {
-    return {
-      id: this.id.getValue,
-      text: this.text.getValue,
-      correctAnswer: this.correctAnswer.map((a) => a.getValue),
-      alternativeAnswers: this.alternativeAnswers.map((a) => a.getValue),
-      explanation: this.explanation.getValue,
-      type: this.type,
-      state: this.state,
-      category: this.category,
-      createdAt: this.createdAt.toISOString(),
-      updatedAt: this.updatedAt.toISOString(),
-      deletedAt: this.deletedAt?.toISOString() || null,
-    };
+  get text(): QuestionText {
+    return this._text;
   }
 
-  public get getState(): QuestionState {
-    return this.state;
+  get correctAnswer(): QuestionText[] {
+    return this._correctAnswer
+  }
+
+  get alternativeAnswer(): QuestionText[] {
+    return this._alternativeAnswers
+  }
+
+  get explanation(): Description {
+    return this._explanation
+  }
+
+  get type(): QuestionType {
+    return this._type
+  }
+
+  get state(): QuestionState {
+    return this._state;
   }
 
   private set setState(newState: QuestionState) {
-    this.state = newState;
-    this.updatedAt.update();
+    this._state = newState;
+    this._updatedAt.update();
+  }
+
+  get category(): QuestionCategory {
+    return this._category
+  }
+
+  get createdAt(): CreatedAt {
+    return this._createdAt
   }
 
   /**
@@ -175,13 +153,13 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
    */
   get getQuestionInfo() {
     return {
-      text: this.text.getValue,
+      text: this._text.getValue,
       answer:
-        this.type === "MULTIPLE_CHOICE"
+        this._type === "MULTIPLE_CHOICE"
           ? this.shuffleAnswersBySortType
           : this.shuffleAnswers,
-      type: this.type,
-      category: this.category,
+      type: this._type,
+      category: this._category,
     };
   }
 
