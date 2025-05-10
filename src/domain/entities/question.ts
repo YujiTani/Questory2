@@ -118,7 +118,7 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     return this._correctAnswer
   }
 
-  get alternativeAnswer(): QuestionText[] {
+  get alternativeAnswers(): QuestionText[] {
     return this._alternativeAnswers
   }
 
@@ -143,58 +143,53 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     return this._category
   }
 
-  get createdAt(): CreatedAt {
-    return this._createdAt
-  }
-
   /**
    * 問題を取得する
    * @return 問題内容, 解答配列, 問題の出題形式, カテゴリー
    */
   get getQuestionInfo() {
     return {
-      text: this._text.getValue,
+      text: this.text,
       answer:
-        this._type === "MULTIPLE_CHOICE"
+        this.type === "MULTIPLE_CHOICE"
           ? this.shuffleAnswersBySortType
           : this.shuffleAnswers,
-      type: this._type,
-      category: this._category,
+      type: this.type,
+      category: this.category,
     };
   }
 
   private get shuffleAnswers() {
     return [
-      ...this.correctAnswer.map((answer) => answer.getValue),
-      ...this.alternativeAnswers.map((answer) => answer.getValue),
+      ...this._correctAnswer,
+      ...this._alternativeAnswers
     ].sort(() => Math.random() - 0.5);
   }
 
   private get shuffleAnswersBySortType() {
     const answers = [
-      ...this.correctAnswer.map((answer) => answer.getValue),
-      ...this.alternativeAnswers.map((answer) => answer.getValue),
+      ...this.correctAnswer,
+      ...this.alternativeAnswers,
     ];
     const answerParts = answers.flat().toString().split(" ");
     return answerParts.sort(() => Math.random() - 0.5);
-  }
-
-  public get getExplanation() {
-    return this.explanation.getValue;
   }
 
   private isCorrectAnswer(userAnswer: string | string[]): boolean {
     switch (this.type) {
       case questionTypes.select:
         return this.isCorrectAnswerBySelectType(userAnswer as string);
+
       case questionTypes.multiple_choice:
         return Array.isArray(userAnswer)
           ? this.isCorrectAnswerByMultipleChoiceType(userAnswer as string[])
           : false;
+
       case questionTypes.sort:
         return this.isCorrectAnswerBySelectType(userAnswer as string);
+
       default:
-        throw new Error("Invalid question type");
+        throw new Error(`${__filename}, Invalid question type`);
     }
   }
 
@@ -217,7 +212,7 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
   public answerQuestion(userAnswer: string | string[]): boolean {
     // スキップ状態で問題を解答することはできない
     if (this.state === questionState.skipped) {
-      throw new Error("This question has been skipped");
+      throw new Error(`${__filename}, This question has been skipped`);
     }
 
     const result = this.isCorrectAnswer(userAnswer);
@@ -233,18 +228,21 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
      * Retry -> LastAttempt
      * LastAttempt -> Skipped
      */
-    switch (this.getState) {
+    switch (this.state) {
       case questionState.active:
         this.setState = questionState.retry;
         break;
+
       case questionState.retry:
         this.setState = questionState.last_attempt;
         break;
+
       case questionState.last_attempt:
         this.setState = questionState.skipped;
         break;
+
       default:
-        throw new Error("Invalid question state");
+        throw new Error(`${__filename}, Invalid question state`);
     }
 
     return result;
