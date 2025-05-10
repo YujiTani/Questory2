@@ -1,9 +1,9 @@
 import type { QuestionEntity } from "@/domain/entities/question";
 import type { QuestionId } from "@/domain/value-objects/question/id.value-objects";
 
-/** 問題リポジトリー */
+/** 問題リポジトリーインターフェース */
 export interface QuestionRepository {
-  /** 問題を保存 */
-  save(question: QuestionEntity): Promise<QuestionEntity>;
+  // 必須メソッド
+  save(question: QuestionEntity): Promise<void>;
   findById(id: QuestionId): Promise<QuestionEntity>;
 }
