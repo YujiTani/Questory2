@@ -1,52 +1,30 @@
 import { test, describe, beforeEach, setSystemTime, expect } from "bun:test";
 
-import { TestQuestionFactory } from "@/tests/factories/test-question.factory";
+import { SAMPLE_DEFAULT_DATE, SAMPLE_CORRECT_ANSWERS, SAMPLE_TEXT, TestQuestionFactory, SAMPLE_EXPLANATION, SAMPLE_ALTERNATIVE_ANSWERS } from "@/tests/factories/test-question.factory";
 
-
-
-
-describe("QuestionEntityのテスト", () => {
-  const date = new Date("2025-01-01T12:00:00Z");
-  const sampleText = "テスト用の問題"
-  const sampleCorrectAnswer = "テスト用の解答"
-  const sampleAlternativeAnswers = [
-"テスト用の類似解答1",
-"テスト用の類似解答2",
-"テスト用の類似解答3",
-]
-  const sampleExplanation = "テスト用の問題です"
-
+describe("QuestionEntityのテスト", async () => {
   beforeEach(() => {
-    setSystemTime(date);
+    setSystemTime(SAMPLE_DEFAULT_DATE);
   });
-
-
 
   test("createメソッドを使って、新規のエンティティーを作成できる", async () => {
     // given (前提条件)：操作を実行する前の状態
-    // - データやモックを作ったりするところ
-
-    // controllerから渡される値を使って、entityを作成する
 
     // when (操作): 操作
-    // - メソッドを呼んだりするところ
     const entity = TestQuestionFactory.create()
 
     // then (結果) : 操作した結果
-    // - アサーションを呼ぶところ
-    expect(entity.text).toBe(sampleText)
-    expect(entity.correctAnswer).toBe(sampleCorrectAnswer)
-    expect(entity.alternativeAnswers).toBe(sampleAlternativeAnswers)
-    expect(entity.explanation).toBe(sampleExplanation)
+    expect(entity.text.getValue).toBe(SAMPLE_TEXT)
+    expect(entity.correctAnswers.map(answer => answer.getValue)).toEqual(SAMPLE_CORRECT_ANSWERS)
+    expect(entity.alternativeAnswers.map(answer => answer.getValue)).toEqual(SAMPLE_ALTERNATIVE_ANSWERS)
+    expect(entity.explanation.getValue).toBe(SAMPLE_EXPLANATION)
     expect(entity.type).toBe("SELECT")
     expect(entity.state).toBe("ACTIVE")
     expect(entity.category).toBe("SQL")
-    expect(entity.createdAt).toBe("2025-01-01T12:00:00.000Z")
-    expect(entity.updatedAt).toBe("2025-01-01T12:00:00.000Z")
+    expect(entity.createdAt).toEqual(SAMPLE_DEFAULT_DATE)
     expect(entity.deletedAt).toBeNull()
   });
 })
-
 
 // describe("QuestionEntityのテスト", () => {
 //   // テスト用のデータ
