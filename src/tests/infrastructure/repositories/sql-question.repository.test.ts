@@ -3,6 +3,7 @@ import { mockDeep, type DeepMockProxy } from "jest-mock-extended";
 
 import type { PrismaClient } from "@prisma/client";
 
+import { QuestionEntity } from "@/domain/entities/question";
 import { SQLQuestionRepository } from "@/infrastructure/repositories/sql-question.repository";
 import { TestQuestionFactory } from "@/tests/factories/test-question.factory";
 
@@ -35,7 +36,7 @@ describe("sql-question.repository.tsのテスト", () => {
     const mockUuid = "1"
     
     // when (操作): 操作
-    const entity = SQLQuestionRepository.toEntity(request)
+    const entity = QuestionEntity.create(...request)
     await sqlQuestionRepositoy.save(entity);
     const foundQuestion = (await sqlQuestionRepositoy.findByUuid({mockUuid}))
 
