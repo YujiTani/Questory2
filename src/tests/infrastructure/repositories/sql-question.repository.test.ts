@@ -6,7 +6,7 @@ import type { PrismaClient } from "@prisma/client";
 import { SQLQuestionRepository } from "@/infrastructure/repositories/sql-question.repository";
 import { TestQuestionFactory } from "@/tests/factories/test-question.factory";
 
-describe.only("sql-question.repository.tsのテスト", () => {
+describe("sql-question.repository.tsのテスト", () => {
   // グローバルに扱う値の定義
   let prismaMock: DeepMockProxy<PrismaClient>;
   let sqlQuestionRepositoy: SQLQuestionRepository;
@@ -16,31 +16,42 @@ describe.only("sql-question.repository.tsのテスト", () => {
     sqlQuestionRepositoy = new SQLQuestionRepository(prismaMock);
   });
 
-  test("saveしたものがfindByIdで取得できること", async () => {
+  test.only("saveしたものがfindByIdで取得できること", async () => {
     // given (前提条件)：操作を実行する前の状態
-    const question = TestQuestionFactory.create()
+    // const question = TestQuestionFactory.create()
+
+    // usecaseからmodel(リクエストOBJ)が渡されていると想定
+    const request = {
+      sampleText: "テスト用の問題",
+      sampleCorrectAnswer: "テスト用の解答",
+      sampleAlternativeAnswers: [
+        "テスト用の類似解答1",
+        "テスト用の類似解答2",
+        "テスト用の類似解答3",
+      ],
+      sampleExplanation: "テスト用の問題です",
+    }
+    // uuidは事前に生成したものをmockしておく
+    const mockUuid = "1"
     
     // when (操作): 操作
-    await sqlQuestionRepositoy.save(question);
-    const foundQuestion =  (await sqlQuestionRepositoy.findByUuid(question.getId))
-
+    const entity = SQLQuestionRepository.toEntity(request)
+    await sqlQuestionRepositoy.save(entity);
+    const foundQuestion = (await sqlQuestionRepositoy.findByUuid({mockUuid}))
 
     // then (結果) : 操作した結果
     // 実際にはentityで返すが、テストでは比較のためにDTOに変換している
-    const questionDTO = question.toDTO()
-    const foundQuestionDTO = foundQuestion.toDTO()
-
-    expect(foundQuestionDTO.id).toBe(questionDTO.id);
-    expect(foundQuestionDTO.text).toBe(questionDTO.text);
-    expect(foundQuestionDTO.correctAnswer).toBe(questionDTO.correctAnswer);
-    expect(foundQuestionDTO.alternativeAnswers).toBe(questionDTO.alternativeAnswers);
-    expect(foundQuestionDTO.explanation).toBe(questionDTO.explanation);
-    expect(foundQuestionDTO.type).toBe(questionDTO.type);
-    expect(foundQuestionDTO.state).toBe(questionDTO.state);
-    expect(foundQuestionDTO.category).toBe(questionDTO.category);
-    expect(foundQuestionDTO.createdAt).toBe(questionDTO.createdAt);
-    expect(foundQuestionDTO.updatedAt).toBe(questionDTO.updatedAt);
-    expect(foundQuestionDTO.deletedAt).toBe(questionDTO.deletedAt);
+    expect(foundQuestion.uuid).toBe(mockUuid);
+    expect(foundQuestion.text).toBe(entity.text);
+    expect(foundQuestion.correctAnswer).toBe(entity.correctAnswer);
+    expect(foundQuestion.alternativeAnswers).toBe(entity.alternativeAnswers);
+    expect(foundQuestion.explanation).toBe(entity.explanation);
+    expect(foundQuestion.type).toBe(entity.type);
+    expect(foundQuestion.state).toBe(entity.state);
+    expect(foundQuestion.category).toBe(entity.category);
+    expect(foundQuestion.createdAt).toBe(entity.createdAt);
+    expect(foundQuestion.updatedAt).toBe(entity.updatedAt);
+    expect(foundQuestion.deletedAt).toBe(entity.deletedAt);
   });
 
   test("エンティティーからモデルにデータを変換する", async () => {
@@ -54,8 +65,7 @@ describe.only("sql-question.repository.tsのテスト", () => {
 
     // then (結果) : 操作した結果
     // - アサーションを呼ぶところ
-    expect(model.id).toBe(question.id)
-    expect(model.uuid).toBe(question.uuid)
+    expect(model.uuid).toBe(question.id)
     expect(model.text).toBe(question.text)
     expect(model.correctAnswer).toBe(question.correctAnswer)
     expect(model.alternativeAnswers).toBe(question.alternativeAnswers)
