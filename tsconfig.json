@@ -44,6 +44,5 @@
     "src/**/*.mts",
     "types/**/*.d.ts",
     "eslint.config.mjs",
-    "context.ts",
   ]
 }
