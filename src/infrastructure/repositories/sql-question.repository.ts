@@ -42,25 +42,25 @@ export class SQLQuestionRepository implements QuestionRepository {
 
   /**
    * uuidに一致する問題を取得
-   * @param id QuestionId
+   * @param uuid QuestionId
+   * @returns 問題エンティティー
    */
   async findByUuid(uuid: QuestionId): Promise<QuestionEntity> {
-    model = this.toModel()
-    const result = this.prisma.question.findUnique({
+    const foundQuestion = this.prisma.question.findUnique({
       where: {
-        uuid: model.uuid,
+        uuid: uuid.getValue,
         deletedAt: null
       }
     })
 
-    return result
+    return this.toEntity(foundQuestion)
   }
 
   /**
    * モデルからエンティティーに変換
    */
   // FIXME:entity.createを呼び出す方法に変える
-  static toEntity(model: {
+  toEntity(model: {
     id: QuestionId,
     text: QuestionText,
     correctAnswer: QuestionText[],
