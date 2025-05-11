@@ -184,7 +184,6 @@ export class QuestionEntity {
 
   private set setState(newState: QuestionState) {
     this._state = newState;
-    this._updatedAt.update();
   }
 
   get category(): string {
@@ -209,14 +208,14 @@ export class QuestionEntity {
 
   private get shuffleAnswers() {
     return [
-      ...this._correctAnswer,
+      ...this._correctAnswers,
       ...this._alternativeAnswers
     ].sort(() => Math.random() - 0.5);
   }
 
   private get shuffleAnswersBySortType() {
     const answers = [
-      ...this.correctAnswer,
+      ...this.correctAnswers,
       ...this.alternativeAnswers,
     ];
     const answerParts = answers.flat().toString().split(" ");
@@ -242,11 +241,11 @@ export class QuestionEntity {
   }
 
   private isCorrectAnswerBySelectType(userAnswer: string) {
-    return this.correctAnswer[0].getValue === userAnswer;
+    return this.correctAnswers[0].getValue === userAnswer;
   }
 
   private isCorrectAnswerByMultipleChoiceType(userAnswer: string[]) {
-    const correctAnswerValues = this.correctAnswer.map(
+    const correctAnswerValues = this.correctAnswers.map(
       (answer) => answer.getValue,
     );
     return userAnswer.every((answer) => correctAnswerValues.includes(answer));
