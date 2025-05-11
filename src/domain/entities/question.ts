@@ -58,10 +58,10 @@ export interface Properties extends PropertiesEssential
   type: string,
   state: QuestionState,
   category: QuestionCategory,
-  id?: number,
-  uuid?: string,
-  createdAt?: Date,
-  deletedAt?: Date,
+  id: number | null,
+  uuid: string | null,
+  createdAt: Date,
+  deletedAt: Date | null,
 }
 
 /**
@@ -98,13 +98,13 @@ export class QuestionEntity {
     type?: string,
     state?: string,
     category?: string,
-    id?: number,
-    uuid?: string,
-    createdAt?: Date,
-    deletedAt?: Date,
+    id: number | null = null,
+    uuid: string | null = null,
+    createdAt: Date = new Date(),
+    deletedAt: Date | null = null,
   ) {
-    this._id = id ?? null
-    this._uuid = uuid ?? null
+    this._id = id
+    this._uuid = uuid
     this._text = QuestionText.create(text)
     this._correctAnswers = correctAnswers.map(answer => QuestionText.create(answer))
     this._alternativeAnswers = alternativeAnswers.map(answer => QuestionText.create(answer))
@@ -112,8 +112,8 @@ export class QuestionEntity {
     this._type = type ?? questionTypes.select
     this._state = state ?? questionState.active
     this._category = category ?? questionCategory.sql
-    this._createdAt = new Date()
-    this._deletedAt = deletedAt ?? null
+    this._createdAt = createdAt
+    this._deletedAt = deletedAt
   }
 
   /**
@@ -149,7 +149,7 @@ export class QuestionEntity {
       properties.id,
       properties.uuid,
       properties.createdAt,
-      properties.deletedAt
+      properties.deletedAt,
     )
   }
 
