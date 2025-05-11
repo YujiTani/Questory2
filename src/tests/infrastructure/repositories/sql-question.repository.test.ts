@@ -28,7 +28,7 @@ describe("sql-question.repository.tsのテスト", () => {
     mock.restore();
   });
 
-  test("saveしたものがfindByIdで取得できること", async () => {
+  test("saveしたものがfindByUuidで取得できること", async () => {
     // given (前提条件)：操作を実行する前の状態
     const entity = TestQuestionFactory.create()
     
