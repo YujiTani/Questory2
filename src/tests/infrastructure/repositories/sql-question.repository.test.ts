@@ -12,7 +12,7 @@ describe("sql-question.repository.tsのテスト", () => {
   // グローバルに扱う値の定義
   let sqlQuestionRepository: SQLQuestionRepository;
   let createSpy;
-  const mockUuid = "0196bf4a-c723-7000-9b4a-4a2e95070000"
+  const mockUuid = "0196bf4a-c723-7000-9b4a-4a2e9507test"
 
   beforeEach(async () => {
     // テストごとにデータを初期化する
@@ -28,7 +28,7 @@ describe("sql-question.repository.tsのテスト", () => {
     mock.restore();
   });
 
-  test.only("saveしたものがfindByIdで取得できること", async () => {
+  test("saveしたものがfindByIdで取得できること", async () => {
     // given (前提条件)：操作を実行する前の状態
     const entity = TestQuestionFactory.create()
     
