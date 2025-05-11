@@ -154,31 +154,31 @@ export class QuestionEntity {
   }
 
   /** Getter */
-  get uuid(): string | null {
+  get uuid() {
     return this._uuid;
   }
 
-  get text(): QuestionText {
+  get text() {
     return this._text;
   }
 
-  get correctAnswers(): QuestionText[] {
+  get correctAnswers() {
     return this._correctAnswers
   }
 
-  get alternativeAnswers(): QuestionText[] {
+  get alternativeAnswers() {
     return this._alternativeAnswers
   }
 
-  get explanation(): Description {
+  get explanation() {
     return this._explanation
   }
 
-  get type(): string {
+  get type() {
     return this._type
   }
 
-  get state(): string  {
+  get state() {
     return this._state;
   }
 
@@ -186,8 +186,16 @@ export class QuestionEntity {
     this._state = newState;
   }
 
-  get category(): string {
+  get category() {
     return this._category
+  }
+
+  get createdAt() {
+    return this._createdAt
+  }
+
+  get deletedAt() {
+    return this._deletedAt
   }
 
   /**
