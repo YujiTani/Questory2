@@ -31,6 +31,7 @@
     "@corbado/types": "^3.0.0",
     "@eslint/compat": "^1.2.6",
     "@types/bun": "latest",
+    "@types/jest": "^29.5.14",
     "@typescript-eslint/eslint-plugin": "^8.24.0",
     "@typescript-eslint/parser": "^8.24.0",
     "eslint": "^9.20.1",
