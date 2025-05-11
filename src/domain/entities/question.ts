@@ -1,11 +1,4 @@
-import { AuditableEntity } from "@/domain/entities/auditable";
-import {
-  CreatedAt,
-  DeletedAt,
-  UpdatedAt,
-} from "@/domain/value-objects/common/date.value-objects";
 import { Description } from "@/domain/value-objects/common/text.value-objects";
-import { QuestionId } from "@/domain/value-objects/question/id.value-objects";
 import { QuestionText } from "@/domain/value-objects/question/text.value-objects";
 
 /**
@@ -52,70 +45,125 @@ export const questionState = {
 } as const;
 export type QuestionState = (typeof questionState)[keyof typeof questionState];
 
+export interface PropertiesEssential
+{
+  text: string,
+  correctAnswers: string[],
+  alternativeAnswers: string[],
+  explanation: string,
+}
+
+export interface Properties extends PropertiesEssential
+{
+  type: string,
+  state: QuestionState,
+  category: QuestionCategory,
+  id?: number,
+  uuid?: string,
+  createdAt?: Date,
+  deletedAt?: Date,
+}
+
 /**
  * 問題エンティティー
  */
-export class QuestionEntity extends AuditableEntity<QuestionId> {
-  protected constructor(
-    _id: QuestionId,
-    private _text: QuestionText,
-    private _correctAnswer: QuestionText[],
-    private _alternativeAnswers: QuestionText[],
-    private _explanation: Description,
-    private _type: QuestionType, // default: select
-    private _state: QuestionState, // default: active
-    private _category: QuestionCategory, // default: SQL
-    _createdAt: CreatedAt,
-    _updatedAt: UpdatedAt,
-    _deletedAt: DeletedAt | null = null,
+export class QuestionEntity {
+  private readonly _id: number | null
+
+  private readonly _uuid: string | null
+
+  private readonly _text: QuestionText
+
+  private readonly _correctAnswers: QuestionText[]
+
+  private readonly _alternativeAnswers: QuestionText[]
+
+  private readonly _explanation: Description
+
+  private readonly _type: string
+
+  private readonly _state: string
+
+  private readonly _category: string
+
+  private readonly _createdAt: Date
+
+  private readonly _deletedAt: Date | null
+  
+  private constructor(
+    text: string,
+    correctAnswers: string[],
+    alternativeAnswers: string[],
+    explanation: string,
+    type?: string,
+    state?: string,
+    category?: string,
+    id?: number,
+    uuid?: string,
+    createdAt?: Date,
+    deletedAt?: Date,
   ) {
-    super(_id, _createdAt, _updatedAt, _deletedAt);
+    this._id = id ?? null
+    this._uuid = uuid ?? null
+    this._text = QuestionText.create(text)
+    this._correctAnswers = correctAnswers.map(answer => QuestionText.create(answer))
+    this._alternativeAnswers = alternativeAnswers.map(answer => QuestionText.create(answer))
+    this._explanation = Description.create(explanation)
+    this._type = type ?? questionTypes.select
+    this._state = state ?? questionState.active
+    this._category = category ?? questionCategory.sql
+    this._createdAt = new Date()
+    this._deletedAt = deletedAt ?? null
   }
 
   /**
    * 問題エンティティーを作成
+   * @param properties 必須プロパティ
+   * @return 問題エンティティー
    */
   static create(
-    text: string,
-    correctAnswer: string[],
-    alternativeAnswers: string[],
-    explanation: string,
-    type: QuestionType = questionTypes.select,
-    state: QuestionState = questionState.active,
-    category: QuestionCategory = questionCategory.sql,
+    properties: PropertiesEssential
   ): QuestionEntity {
-    if (type !== "MULTIPLE_CHOICE" && correctAnswer.length > 1) {
-      throw new Error(
-        "MULTIPLE_CHOICE以外のtypeでは、解答は一つしか許されない",
-      );
-    }
-
     return new QuestionEntity(
-      QuestionId.create(),
-      QuestionText.create(text),
-      correctAnswer.map((answer) => QuestionText.create(answer)),
-      alternativeAnswers.map((answer) => QuestionText.create(answer)),
-      Description.create(explanation),
-      type,
-      state,
-      category,
-      CreatedAt.create(),
-      UpdatedAt.create(),
-      DeletedAt.createNull(),
+      properties.text,
+      properties.correctAnswers,
+      properties.alternativeAnswers,
+      properties.explanation
     );
   }
 
+  /**
+   * モデルを問題エンティティーに変換; リポジトリーで呼び出す
+   * @param properties 全プロパティー
+   * @returns 問題エンティティー
+   */
+  static reconstruct(properties: Properties): QuestionEntity {
+    return new QuestionEntity(
+      properties.text,
+      properties.correctAnswers,
+      properties.alternativeAnswers,
+      properties.explanation,
+      properties.type,
+      properties.state,
+      properties.category,
+      properties.id,
+      properties.uuid,
+      properties.createdAt,
+      properties.deletedAt
+    )
+  }
+
   /** Getter */
-  get id(): QuestionId {
-    return this._id;
+  get uuid(): string | null {
+    return this._uuid;
   }
 
   get text(): QuestionText {
     return this._text;
   }
 
-  get correctAnswer(): QuestionText[] {
-    return this._correctAnswer
+  get correctAnswers(): QuestionText[] {
+    return this._correctAnswers
   }
 
   get alternativeAnswers(): QuestionText[] {
@@ -126,11 +174,11 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     return this._explanation
   }
 
-  get type(): QuestionType {
+  get type(): string {
     return this._type
   }
 
-  get state(): QuestionState {
+  get state(): string  {
     return this._state;
   }
 
@@ -139,7 +187,7 @@ export class QuestionEntity extends AuditableEntity<QuestionId> {
     this._updatedAt.update();
   }
 
-  get category(): QuestionCategory {
+  get category(): string {
     return this._category
   }
 
