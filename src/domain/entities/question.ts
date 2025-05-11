@@ -68,9 +68,9 @@ export interface Properties extends PropertiesEssential
  * 問題エンティティー
  */
 export class QuestionEntity {
-  private readonly _id: number | null
+  private _id: number | null
 
-  private readonly _uuid: string | null
+  private _uuid: string | null
 
   private readonly _text: QuestionText
 
@@ -82,13 +82,13 @@ export class QuestionEntity {
 
   private readonly _type: string
 
-  private readonly _state: string
+  private _state: string
 
   private readonly _category: string
 
   private readonly _createdAt: Date
 
-  private readonly _deletedAt: Date | null
+  private _deletedAt: Date | null
   
   private constructor(
     text: string,
@@ -158,6 +158,11 @@ export class QuestionEntity {
     return this._uuid;
   }
 
+  public setUuid(uuid: string )
+  {
+    this._uuid = uuid;
+  }
+
   get text() {
     return this._text;
   }
@@ -197,6 +202,15 @@ export class QuestionEntity {
   get deletedAt() {
     return this._deletedAt
   }
+
+  	/**
+	 * エンティティーが永続化されているか？
+	 * @returns Yes/No
+	 */
+	isPersisted()
+	{
+		return !!this._id;
+	}
 
   /**
    * 問題を取得する

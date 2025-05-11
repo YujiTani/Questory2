@@ -1,9 +1,13 @@
 import { type PrismaClient } from "@prisma/client";
 
 import type { QuestionRepository } from "@/domain/repositories/question.repository";
+import type { Description } from "@/domain/value-objects/common/text.value-objects";
+import type { QuestionText } from "@/domain/value-objects/question/text.value-objects";
 
-import { type QuestionEntity, questionTypes, type QuestionCategory, type QuestionState, type QuestionType, questionCategory, questionState } from "@/domain/entities/question"
+import { QuestionEntity, questionTypes, type QuestionCategory, type QuestionState, type QuestionType, questionCategory, questionState } from "@/domain/entities/question"
+import { CreatedAt, DeletedAt, UpdatedAt } from "@/domain/value-objects/common/date.value-objects";
 import { type QuestionId } from "@/domain/value-objects/question/id.value-objects";
+
 
 
 export class SQLQuestionRepository implements QuestionRepository {
@@ -15,25 +19,36 @@ export class SQLQuestionRepository implements QuestionRepository {
    */
   async save(question: QuestionEntity): Promise<void> {
     // entityをDB保存用のデータに変換
-    model = this.toModel(question)
-
+    const model = this.toModel(question)
     this.prisma.question.create({
       data: {
-        ...model,
+        uuid: model.uuid,
+        text: model.text,
+        correctAnswer: model.correctAnswers,
+        alternativeAnswers: model.alternativeAnswers,
+        explanation: model.explanation,
+        type: model.type,
+        state: model.state,
+        category: model.category,
+        createdAt: model.createdAt,
+        deletedAt: model.deletedAt,
       },
     });
+
+    if(!question.isPersisted() && model.uuid ) {
+      question.setUuid(model.uuid)
+    }
   }
 
   /**
    * uuidに一致する問題を取得
    * @param id QuestionId
    */
-  async findByUuid(id: QuestionId): Promise<QuestionEntity> {
+  async findByUuid(uuid: QuestionId): Promise<QuestionEntity> {
     model = this.toModel()
-
     const result = this.prisma.question.findUnique({
       where: {
-        id: model.id,
+        uuid: model.uuid,
         deletedAt: null
       }
     })
@@ -44,20 +59,21 @@ export class SQLQuestionRepository implements QuestionRepository {
   /**
    * モデルからエンティティーに変換
    */
-  toEntity(model: {
-    id: string,
-    text: string,
-    correctAnswer: string[],
-    alternativeAnswers: string[],
-    explanation: string,
+  // FIXME:entity.createを呼び出す方法に変える
+  static toEntity(model: {
+    id: QuestionId,
+    text: QuestionText,
+    correctAnswer: QuestionText[],
+    alternativeAnswers: QuestionText[],
+    explanation: Description,
     type: number,
     state: number,
     category: number,
     createdAt: BigInt,
     updatedAt: BigInt,
     deletedAt: BigInt | null,
-  }) {
-    return {
+  }): QuestionEntity {
+    return QuestionEntity.reconstruct(
       id: model.id,
       text: model.text,
       correctAnswer: model.correctAnswer,
@@ -66,10 +82,10 @@ export class SQLQuestionRepository implements QuestionRepository {
       type: this.toEntity$type(model.type), 
       state: this.toEntity$state(model.state), 
       category: this.toEntity$category(model.category),
-      createdAt: new Date(Number(model.createdAt)),
-      updatedAt:  new Date(Number(model.updatedAt)),
+      createdAt: CreatedAt.create(new Date(Number(model.createdAt))),
+      updatedAt:  UpdatedAt.create(new Date(Number(model.updatedAt))),
       deletedAt: this.toEntity$deletedAt(model.deletedAt)
-    }
+    )
   }
 
   /**
@@ -77,7 +93,7 @@ export class SQLQuestionRepository implements QuestionRepository {
    * @param type number 問題の種類
    * @return QuestionType 数値をQuestionTypeに変換
    */
-  toEntity$type(type: number): QuestionType {
+  private static toEntity$type(type: number): QuestionType {
     switch (type)
     {
       case 10:
@@ -99,7 +115,7 @@ export class SQLQuestionRepository implements QuestionRepository {
    * @param type number 問題の状態
    * @return QuestionType 数値をQuestionTypeに変換
    */
-  toEntity$state(state: number): QuestionState {
+  private static toEntity$state(state: number): QuestionState {
     switch(state)
     {
       case 10:
@@ -127,7 +143,7 @@ export class SQLQuestionRepository implements QuestionRepository {
    * @param type number 問題の状態
    * @return QuestionType 数値をQuestionTypeに変換
    */
-  toEntity$category(category: number): QuestionCategory {
+    private static toEntity$category(category: number): QuestionCategory {
     switch(category)
     {
       case 10:
@@ -149,25 +165,25 @@ export class SQLQuestionRepository implements QuestionRepository {
    * @param deletedAt BigInt | null
    * @return Date | null
    */
-  toEntity$deletedAt(deletedAt: BigInt | null): Date | null {
-    return deletedAt ? new Date(Number(deletedAt)) : null
+  private static toEntity$deletedAt(deletedAt: BigInt | null): DeletedAt | null {
+    return deletedAt ? DeletedAt.create(new Date(Number(deletedAt))) : null
   }
 
   /**
    * エンティティーをモデルに変換
+   * @param エンティティー
    */
   toModel(entity: QuestionEntity) {
     return {
-      uuid: entity.id,
-      text: entity.text,
-      correctAnswer: entity.correctAnswer,
-      alternativeAnswers: entity.alternativeAnswers,
-      explanation: entity.explanation,
+      uuid: entity.uuid.getValue,
+      text: entity.text.getValue,
+      correctAnswers: entity.correctAnswers.getValue,
+      alternativeAnswers: entity.alternativeAnswers.getValue,
+      explanation: entity.explanation.getValue,
       type: this.toModel$type(entity.type),
       state: this.toModel$state(entity.state),
       category: this.toModel$category(entity.category),
       createdAt: BigInt(entity.createdAt.getTime()),
-      updatedAt: BigInt(entity.updatedAt.getTime()),
       deletedAt: entity.deletedAt ? BigInt(entity.deletedAt.getTime()): null,
     }
   }
@@ -177,7 +193,7 @@ export class SQLQuestionRepository implements QuestionRepository {
  * @param type 問題の種類
  * @return number DBでは数値として扱う
  */
-  toModel$type(type: QuestionType): number {
+  private toModel$type(type: string): number {
     switch(type)
     {
     case "SELECT":
@@ -199,7 +215,7 @@ export class SQLQuestionRepository implements QuestionRepository {
  * @param state 問題の状態
  * @return number DBでは数値として扱う
  */
-  toModel$state(state: QuestionState): number {
+  private toModel$state(state: string): number {
     switch(state)
     {
     case "ACTIVE":
@@ -227,7 +243,7 @@ export class SQLQuestionRepository implements QuestionRepository {
  * @param category 問題の状態
  * @return number DBでは数値として扱う
  */
-  toModel$category(category: QuestionCategory): number {
+  private toModel$category(category: string): number {
     switch(category)
     {
     case "HTTP":
