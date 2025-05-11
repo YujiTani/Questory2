@@ -27,12 +27,11 @@ CREATE TABLE "Question" (
     "text" TEXT NOT NULL,
     "correct_answer" TEXT[],
     "alternative_answers" TEXT[],
-    "explanation" TEXT[],
+    "explanation" TEXT NOT NULL,
     "type" SMALLINT NOT NULL,
     "state" SMALLINT NOT NULL,
     "category" SMALLINT NOT NULL,
     "created_at" BIGINT NOT NULL,
-    "updated_at" BIGINT NOT NULL,
     "deleted_at" BIGINT,
 
     CONSTRAINT "Question_pkey" PRIMARY KEY ("id")
