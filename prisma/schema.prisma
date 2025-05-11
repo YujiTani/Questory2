@@ -37,7 +37,7 @@ model Question {
   id Int @id @default(autoincrement())
   uuid String @unique @default(uuid())
   text String
-  correctAnswer String[] @map("correct_answer")
+  correctAnswers String[] @map("correct_answer")
   alternativeAnswers String[] @map("alternative_answers")
   explanation String
   type Int @db.SmallInt
