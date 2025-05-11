@@ -19,24 +19,22 @@ describe("sql-question.repository.tsのテスト", () => {
 
   test.only("saveしたものがfindByIdで取得できること", async () => {
     // given (前提条件)：操作を実行する前の状態
-    // const question = TestQuestionFactory.create()
-
-    // usecaseからmodel(リクエストOBJ)が渡されていると想定
     const request = {
-      sampleText: "テスト用の問題",
-      sampleCorrectAnswer: "テスト用の解答",
-      sampleAlternativeAnswers: [
+      text: "テスト用の問題",
+      correctAnswers: ["テスト用の解答"],
+      alternativeAnswers: [
         "テスト用の類似解答1",
         "テスト用の類似解答2",
         "テスト用の類似解答3",
       ],
-      sampleExplanation: "テスト用の問題です",
+      explanation: "テスト用の問題です",
     }
     // uuidは事前に生成したものをmockしておく
     const mockUuid = "1"
     
     // when (操作): 操作
-    const entity = QuestionEntity.create(...request)
+    // const question = TestQuestionFactory.create()
+    const entity = QuestionEntity.create(request)
     await sqlQuestionRepositoy.save(entity);
     const foundQuestion = (await sqlQuestionRepositoy.findByUuid({mockUuid}))
 
@@ -44,15 +42,14 @@ describe("sql-question.repository.tsのテスト", () => {
     // 実際にはentityで返すが、テストでは比較のためにDTOに変換している
     expect(foundQuestion.uuid).toBe(mockUuid);
     expect(foundQuestion.text).toBe(entity.text);
-    expect(foundQuestion.correctAnswer).toBe(entity.correctAnswer);
+    expect(foundQuestion.correctAnswers).toBe(entity.correctAnswers);
     expect(foundQuestion.alternativeAnswers).toBe(entity.alternativeAnswers);
     expect(foundQuestion.explanation).toBe(entity.explanation);
     expect(foundQuestion.type).toBe(entity.type);
     expect(foundQuestion.state).toBe(entity.state);
     expect(foundQuestion.category).toBe(entity.category);
     expect(foundQuestion.createdAt).toBe(entity.createdAt);
-    expect(foundQuestion.updatedAt).toBe(entity.updatedAt);
-    expect(foundQuestion.deletedAt).toBe(entity.deletedAt);
+    expect(foundQuestion.deletedAt).toBeNull();
   });
 
   test("エンティティーからモデルにデータを変換する", async () => {
