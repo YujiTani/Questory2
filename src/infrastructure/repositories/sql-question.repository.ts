@@ -3,7 +3,7 @@ import { type PrismaClient } from "@prisma/client";
 import type { QuestionRepository } from "@/domain/repositories/question.repository";
 
 import { QuestionEntity, questionTypes, type QuestionCategory, type QuestionState, type QuestionType, questionCategory, questionState, type Properties } from "@/domain/entities/question"
-import { type QuestionId } from "@/domain/value-objects/question/id.value-objects";
+import { QuestionId } from "@/domain/value-objects/question/id.value-objects";
 
 type ToEntityProperties = Omit<Properties, 'type' | 'state' | 'category' | 'createdAt' | 'deletedAt'> & 
 { 
@@ -24,12 +24,17 @@ export class SQLQuestionRepository implements QuestionRepository {
   async save(question: QuestionEntity): Promise<void> {
     // entityをDB保存用のデータに変換
     const model = this.toModel(question)
-    this.prisma.question.create({
+
+    if(!model.uuid) {
+      throw Error(`${__filename}, model does not have uuid`)
+    }
+
+    await this.prisma.question.create({
       data: {
         uuid: model.uuid,
         text: model.text,
-        correctAnswers: model.correctAnswers,
-        alternativeAnswers: model.alternativeAnswers,
+        correctAnswers: model.correctAnswers.map(answer => answer.getValue),
+        alternativeAnswers: model.alternativeAnswers.map(answer => answer.getValue),
         explanation: model.explanation,
         type: model.type,
         state: model.state,
@@ -49,19 +54,19 @@ export class SQLQuestionRepository implements QuestionRepository {
    * @param uuid QuestionId
    * @returns 問題エンティティー
    */
-  async findByUuid(uuid: QuestionId): Promise<QuestionEntity> {
-    const foundQuestion = await this.prisma.question.findUnique({
-      where: {
-        uuid: uuid.getValue,
-        deletedAt: null
+  async findByUuid(uuid: string): Promise<QuestionEntity> {
+      const foundQuestion = await this.prisma.question.findUnique({
+        where: {
+          uuid,
+          deletedAt: null
+        }
+      })
+  
+      if (!foundQuestion) {
+        throw Error(`Question with uuid ${uuid} not found`)
       }
-    })
-
-    if (!foundQuestion) {
-      throw new Error(`Question with uuid ${uuid.getValue} not found`)
-    }
-
-    return this.toEntity(foundQuestion)
+  
+      return this.toEntity(foundQuestion)
   }
 
   /**
@@ -166,7 +171,7 @@ export class SQLQuestionRepository implements QuestionRepository {
    * @param エンティティー
    */
   toModel(entity: QuestionEntity) {
-    return {
+    const model = {
       uuid: entity.uuid ? entity.uuid : null,
       text: entity.text.getValue,
       correctAnswers: entity.correctAnswers,
@@ -178,6 +183,13 @@ export class SQLQuestionRepository implements QuestionRepository {
       createdAt: BigInt(entity.createdAt.getTime()),
       deletedAt: entity.deletedAt ? BigInt(entity.deletedAt.getTime()): null,
     }
+
+    if(!model.uuid) {
+      model.uuid = QuestionId.create()
+      // model.uuid = "0196bf4a-c723-7000-9b4a-4a2e95070000"
+    }
+
+    return model
   }
 
 /**
