@@ -4,6 +4,7 @@ import { mockDeep, type DeepMockProxy } from "jest-mock-extended";
 import type { PrismaClient } from "@prisma/client";
 
 import { QuestionEntity } from "@/domain/entities/question";
+import { QuestionId } from "@/domain/value-objects/question/id.value-objects";
 import { SQLQuestionRepository } from "@/infrastructure/repositories/sql-question.repository";
 import { TestQuestionFactory } from "@/tests/factories/test-question.factory";
 
@@ -30,13 +31,13 @@ describe("sql-question.repository.tsのテスト", () => {
       explanation: "テスト用の問題です",
     }
     // uuidは事前に生成したものをmockしておく
-    const mockUuid = "1"
+    const mockUuid = QuestionId.create()
     
     // when (操作): 操作
     // const question = TestQuestionFactory.create()
     const entity = QuestionEntity.create(request)
     await sqlQuestionRepositoy.save(entity);
-    const foundQuestion = (await sqlQuestionRepositoy.findByUuid({mockUuid}))
+    const foundQuestion = (await sqlQuestionRepositoy.findByUuid(mockUuid))
 
     // then (結果) : 操作した結果
     // 実際にはentityで返すが、テストでは比較のためにDTOに変換している
