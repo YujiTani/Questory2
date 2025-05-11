@@ -12,7 +12,7 @@ describe("sql-question.repository.tsのテスト", () => {
   // グローバルに扱う値の定義
   let sqlQuestionRepository: SQLQuestionRepository;
   let createSpy;
-  const mockUuid = "0196bf4a-c723-7000-9b4a-4a2e9507test"
+  const MOCK_UUID = "0196bf4a-c723-7000-9b4a-4a2e9507test"
 
   beforeEach(async () => {
     // テストごとにデータを初期化する
@@ -21,7 +21,7 @@ describe("sql-question.repository.tsのテスト", () => {
     sqlQuestionRepository = new SQLQuestionRepository(prisma)
     
     createSpy = spyOn(QuestionId, "create");
-    createSpy.mockImplementation(() => mockUuid)
+    createSpy.mockImplementation(() => MOCK_UUID)
   });
 
   afterEach(() => {
@@ -34,10 +34,10 @@ describe("sql-question.repository.tsのテスト", () => {
     
     // when (操作): 操作
     await sqlQuestionRepository.save(entity);
-    const foundQuestion = await sqlQuestionRepository.findByUuid(mockUuid)
+    const foundQuestion = await sqlQuestionRepository.findByUuid(MOCK_UUID)
 
     // then (結果) : 操作した結果
-    expect(foundQuestion.uuid).toBe(mockUuid);
+    expect(foundQuestion.uuid).toBe(MOCK_UUID);
     expect(foundQuestion.text.getValue).toBe(entity.text.getValue);
     expect(foundQuestion.correctAnswers).toEqual(entity.correctAnswers);
     expect(foundQuestion.alternativeAnswers).toEqual(entity.alternativeAnswers);
